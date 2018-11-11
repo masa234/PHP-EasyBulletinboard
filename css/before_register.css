@@ -1,17 +1,4 @@
 body {
   background-color: #99FFCC;
-  /* font-family: 'Helvetica Neue','Helvetica','Arial',cursive; */
-  /* font-family: 'Avenir','Helvetica Neue','Helvetica','Arial','Hiragino Sans','ヒラギノ角ゴシック',YuGothic,'Yu Gothic','メイリオ', Meiryo,'ＭＳ Ｐゴシック','MS PGothic',cursive; */
-  font-family: sans-serif,HGS創英角ﾎﾟｯﾌﾟ体;
-  color: black;
 }
-
-.btn {
-  border-radius: 0px;
-}
-
-.container {
-  margin-top: 30px;
-}
-
 

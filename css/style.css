@@ -1,0 +1,42 @@
+
+body {
+    font-family:sans-serif,HGS創英角ﾎﾟｯﾌﾟ体;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.container {
+    margin-top: 30px;
+}
+
+.card {
+    border-radius: 0px !important;
+}
+
+.jumbotron {
+    background-color: #fff !important;
+    border-radius: 50px;
+    box-shadow: -5px 6px gray inset;
+}
+
+.jumbotron:hover {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+    -ms-transform: scale(1.01);
+    transform: scale(1.01);
+}
+
+.form-control {
+    border-radius: 0px !important;
+}
+
+.img-circle {
+    border-radius: 50px;
+}
+
+.card {
+    border-radius: 15px !important; 
+}

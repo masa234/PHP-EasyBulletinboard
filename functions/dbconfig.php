@@ -8,7 +8,7 @@ function get_db() {
         $HOST = "localhost";
         $USERNAME = "root";
         $PASSWORD = "";
-        $DBNAME = "zemi3";
+        $DBNAME = "bulletin";
 
         $mysqli = new mysqli( $HOST, $USERNAME, $PASSWORD, $DBNAME );
 
