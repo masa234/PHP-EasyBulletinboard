@@ -4,20 +4,18 @@
 function get_db() {
     static $mysqli;
 
-    if ( ! $mysqli ) {
-        $HOST = "localhost";
-        $USERNAME = "root";
-        $PASSWORD = "";
-        $DBNAME = "bulletin";
+    $HOST = "localhost";
+    $USERNAME = "root";
+    $PASSWORD = "";
+    $DBNAME = "bulletinboard";
 
-        $mysqli = new mysqli( $HOST, $USERNAME, $PASSWORD, $DBNAME );
+    $mysqli = new mysqli( $HOST, $USERNAME, $PASSWORD, $DBNAME );
 
-        if ( $mysqli->connect_error ){
-            print $mysqli->connect_error();
-            exit;
-        } else {
-            $mysqli->set_charset( "utf8" );
-        }
+    if ( $mysqli->connect_error ){
+        print $mysqli->connect_error();
+        exit;
+    } else {
+        $mysqli->set_charset( "utf8" );
     }
 
     return $mysqli;
@@ -29,3 +27,4 @@ function escape( $str ) {
 
     return $mysqli->real_escape_string( $str );
 }
+

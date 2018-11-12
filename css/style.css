@@ -1,6 +1,9 @@
 
 body {
-    font-family:sans-serif,HGS創英角ﾎﾟｯﾌﾟ体;
+    background-color: #FFE4B5 !important;
+    /* font-family: 'Helvetica Neue','Helvetica','Arial',cursive; */
+    /* font-family: 'Avenir','Helvetica Neue','Helvetica','Arial','Hiragino Sans','ヒラギノ角ゴシック',YuGothic,'Yu Gothic','メイリオ', Meiryo,'ＭＳ Ｐゴシック','MS PGothic',cursive; */
+    color: black;
 }
 
 .btn {

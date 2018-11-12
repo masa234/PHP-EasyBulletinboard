@@ -9,6 +9,11 @@
   </title>
   <link href="../css/bootstrap.min.css" rel="stylesheet">
   <link href="../css/style.css" rel="stylesheet">
+  <?php if ( isAuthenticated() ): ?>
+  <link href="../css/after_register.css" rel="stylesheet">
+  <?php else: ?>
+  <link href="../css/before_register.css" rel="stylesheet">
+  <?php endif; ?>
 </head>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
@@ -23,12 +28,18 @@
     </div>
     <div class="collapse navbar-collapse" id="navbarEexample">
       <ul class="navbar-nav mr-auto">
+        <?php if ( ! isAuthenticated() ): ?>
         <li class="nav-item">
           <a class="nav-link text-white" href="register.php">新規登録</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="authenticate.php">ログイン</a>
         </li>
+        <?php else: ?>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="signout.php">ログアウト</a>
+        </li>
+        <?php endif; ?>
       </ul>
     </div>
   </div>
