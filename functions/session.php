@@ -31,7 +31,6 @@ if ( $fname == 'authenticate' || $fname == 'register' && $fname != 'signout') {
 } 
 
 function authenticate( $user_name, $password ) {
-    $mysqli = get_db();
 
     $user_name = escape( $user_name );
     $password = escape( $password );
@@ -41,15 +40,15 @@ function authenticate( $user_name, $password ) {
         WHERE user_name='$user_name'
         ";
 
-    $result = $mysqli->query( $query );
+    $result = query( $query );
 
-    if ( ! $result  ) {
-        print "クエリ失敗";
-        $mysqli->close();
-        exit();
+    if ( mysqli_num_rows( $result ) == 0 ) {
+        message_display( 'danger' , 'ログインに失敗しました' );
+        return;
     }
 
     while ($row = $result->fetch_assoc()) {
+        $user_id = $row['id'];
         $user_name = $row['user_name'];
         $nickname = $row['nickname'];
         $email = $row['email'];
@@ -60,16 +59,17 @@ function authenticate( $user_name, $password ) {
     $result->close();
 
     if ( password_verify( $password, $db_password ) ) {
+        session_set( 'user_id', $user_id );
         session_set( 'user_name', $user_name );
         session_set( 'nickname', $nickname );
         session_set( 'email', $email );
         session_set( 'password', $db_password );
         session_set( 'session_created_at', strtotime( 'now' ) );
         session_regenerate_id( true );
-        header( "Location: root.php" );
+        header( "Location: posts.php" );
         exit;
     } else {
-        print 'ログインに失敗しました';
+        message_display( 'danger' , 'ログインに失敗しました' );
     }
 }
 

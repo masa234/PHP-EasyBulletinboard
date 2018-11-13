@@ -43,3 +43,10 @@ body {
 .card {
     border-radius: 15px !important; 
 }
+
+.alert {
+    padding: 30px !important;
+    font-weight: bolder !important;
+    font-size: 25px !important;
+    border-radius: 15px !important;
+}

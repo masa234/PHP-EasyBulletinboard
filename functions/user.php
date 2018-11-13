@@ -9,9 +9,7 @@ function user_register( $user_name, $nickname, $email, $password ) {
         user_insert( $user_name, $nickname, $email, $password );
     }
 
-    foreach ( $errors as $error ) {
-        print $error;
-    }
+    error_display( $errors );
 }
 
 // ユーザのバリデーション（若干抜けてる部分があるかもしれません）
@@ -31,7 +29,7 @@ function user_validation( $user_name, $nickname, $email, $password ) {
         $errors[] = "nicknameが空です";
     } else if ( mb_strlen( trim( $nickname ) ) > 15 ) {
         $errors[] = "nicknameは15文字以内で入力してください";
-    } else if ( ! isUniqueNickname( trim( $nickname ) ) ) {
+    } else if ( ! isUniq( 'users', 'nickname' , trim( $nickname ) ) ) {
         $errors[] = "nicknameが重複しています";
     } else if ( is_numeric( $nickname ) ) {
         $errors[] = "nicknameは文字列でなくてはいけません";
@@ -52,31 +50,7 @@ function user_validation( $user_name, $nickname, $email, $password ) {
     return $errors;
 }
 
-function isUniqueNickname( $nickname ) {
-    $mysqli = get_db();
-
-    $nickname = escape( $nickname );
-
-    $query = "
-        SELECT * FROM users
-        WHERE nickname = '$nickname'
-        ";
-
-    $result = $mysqli->query( $query );
-
-    if ( mysqli_num_rows( $result ) ==  0 ) {
-        $mysqli->close();
-        return true;
-    }
-
-    $result->close();
-
-    return false;
-}
-
 function user_insert( $user_name, $nickname, $email, $password ) {
-    $mysqli = get_db();
-
     // データをエスケープ
     $user_name = escape( $user_name );
     $nickname = escape( $nickname );
@@ -89,10 +63,8 @@ function user_insert( $user_name, $nickname, $email, $password ) {
             ) VALUES (
                 '$user_name', '$nickname', '$email', '$password'
             )";
+    
+    query( $query );
 
-    if( $mysqli->query( $query ) ) {
-        print 'ユーザの作成に成功しました';
-    } else {
-        printf("Errormessage: %s\n", $mysqli->error);
-    }
+    message_display( 'success' , 'ユーザの作成に成功しました' );;
 }

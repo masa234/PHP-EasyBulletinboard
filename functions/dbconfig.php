@@ -1,5 +1,8 @@
 <?php
 // データベースの接続 ( 後にDbManagement Class の コンストラクタに吸収 )
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 
 function get_db() {
     static $mysqli;
