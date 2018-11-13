@@ -5,7 +5,7 @@ function post_register( $title, $content ) {
     $errors = post_validation( $title, $content );
 
     if ( count( $errors) == 0 ) {
-        post_insertORUpdate( 'insert' , $title, $content );
+        post_insertOrUpdate( 'insert' , $title, $content );
     }
 
     error_display( $errors );
@@ -36,7 +36,7 @@ function post_validation( $title, $content ) {
     return $errors;
 }
 
-function post_insertORUpdate( $order, $title, $content ) {
+function post_insertOrUpdate( $order, $title, $content ) {
 
     $title = escape( $title );
     $content = escape( $content );

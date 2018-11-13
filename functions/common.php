@@ -21,14 +21,14 @@ function query( $query ) {
         $mysqli->close(); // データベース切断
     } else if ( mysqli_num_rows( $result ) > 1 ) {
         // select文
-        // 結果セットが複数の場合は全件、取り出してから返す
+        // 結果セットが複数の場合は、全件取り出してから返す
         $result = $result->fetch_all();
     } 
 
     return $result;
 }   
 
-// テーブル名、カラム、値を指定してテーブルに、指定したカラムを持つ値のレコードが存在するか判定
+// テーブル名、カラム、値を指定してテーブルに、指定した値のレコードが存在するか判定
 function isUniq( $table, $column, $value ) {
 
     $value = escape( $value );
