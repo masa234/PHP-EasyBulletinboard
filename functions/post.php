@@ -53,7 +53,7 @@ function post_insertOrUpdate( $order, $title, $content ) {
                 '$title', '$content', '$now', '$now', '$user_id' )
             ";
 
-        $message = 'ユーザの作成に成功しました';
+        $message = '新規投稿に成功しました';
     } else if ( $order == 'update' ) {
         // update   
         // この前にログインユーザの投稿かどうか判定する
@@ -73,12 +73,66 @@ function post_insertOrUpdate( $order, $title, $content ) {
 }   
 
 function post_all() {
+
+    
     $query = "
         SELECT * FROM posts 
         ORDER BY created_at DESC
         ";
 
     $result = query( $query );
+
+    $posts = array();
+
+    while ($row = $result->fetch_assoc()) {
+        $posts[] = $row;
+    }
+
+    $result->close();
     
-    return $result;
+    return $posts;
+}
+
+function post_delete( $post_id ) {
+
+    $post_id = escape( $post_id );
+    
+    if ( ! isCurrentUserPost( $post_id ) ) {
+        header( "Location: posts.php" );
+        exit();
+    }
+
+    $user_id = session_get( 'user_id' );
+
+    $query ="
+        DELETE FROM posts 
+        WHERE id = '$post_id'
+        AND user_id = '$user_id'
+        ";
+
+    query( $query );
+
+    message_display( 'success', '削除に成功しました' );
+}
+
+function isCurrentUserPost( $post_id ) {
+
+    $post_id = escape( $post_id );
+    $user_id = session_get( 'user_id' );
+
+    $query ="
+        SELECT * FROM posts
+        WHERE id = '$post_id'
+        AND user_id = '$user_id'
+        ";
+
+    $result = query( $query );
+
+    if ( mysqli_num_rows( $result ) == 1 ) {
+        $result->close();
+        return true;
+    }
+
+    $result->close();
+    return false;
 }

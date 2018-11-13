@@ -14,9 +14,29 @@
   <?php else: ?>
   <link href="../css/before_register.css" rel="stylesheet">
   <?php endif; ?>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script><script type="text/javascript" src="./footerFixed.js"></script>
 </head>
-<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
+  function check(){
+
+    if( window.confirm( 'Are you sure?' ) ){
+
+      return true;
+
+    } else{
+
+      return false;
+
+    }
+
+  }
+
+  function countLength( text, field, count ) {
+  
+    document.getElementById( field ).innerHTML = text.length;
+
+  } 
+
 </script>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -36,6 +56,9 @@
           <a class="nav-link text-white" href="authenticate.php">ログイン</a>
         </li>
         <?php else: ?>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="posts.php">新規投稿</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="signout.php">ログアウト</a>
         </li>

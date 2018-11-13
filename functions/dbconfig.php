@@ -11,7 +11,7 @@ function get_db() {
     $USERNAME = "root";
     $PASSWORD = "";
     $DBNAME = "bulletinboard";
-
+    
     $mysqli = new mysqli( $HOST, $USERNAME, $PASSWORD, $DBNAME );
 
     if ( $mysqli->connect_error ){

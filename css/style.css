@@ -50,3 +50,17 @@ body {
     font-size: 25px !important;
     border-radius: 15px !important;
 }
+
+.card--extend {
+    background-color: #fff !important;
+    border-radius: 50px;
+    box-shadow: -5px 6px gray inset;
+}
+
+.card--extend:hover {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+    -ms-transform: scale(1.01);
+    transform: scale(1.01);
+}

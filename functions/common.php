@@ -16,13 +16,9 @@ function query( $query ) {
     }
 
     // insert文 delete文 update文
-    if ( $result == true ) {
+    if ( is_bool( $result ) && $result == true ) {
         // 結果セットを返さない場合
         $mysqli->close(); // データベース切断
-    } else if ( mysqli_num_rows( $result ) > 1 ) {
-        // select文
-        // 結果セットが複数の場合は、全件取り出してから返す
-        $result = $result->fetch_all();
     } 
 
     return $result;
