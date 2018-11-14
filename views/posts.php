@@ -18,7 +18,7 @@ if ( isset( $_POST['post_delete'] ) ) {
 
 define( "TEXT", "新規投稿" );
 
-require ( get_partials_dir() . "/posts_form.php" );
+require ( get_partials_dir() . "/post_form.php" );
 
 $posts = post_all();
 

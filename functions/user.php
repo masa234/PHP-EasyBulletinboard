@@ -29,7 +29,7 @@ function user_validation( $user_name, $nickname, $email, $password ) {
         $errors[] = "nicknameが空です";
     } else if ( mb_strlen( trim( $nickname ) ) > 15 ) {
         $errors[] = "nicknameは15文字以内で入力してください";
-    } else if ( ! isUniq( 'users', 'nickname' , trim( $nickname ) ) ) {
+    } else if ( ! isUniq( 'users', 'nickname' , $nickname ) ) {
         $errors[] = "nicknameが重複しています";
     } else if ( is_numeric( $nickname ) ) {
         $errors[] = "nicknameは文字列でなくてはいけません";
