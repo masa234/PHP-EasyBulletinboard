@@ -1,11 +1,11 @@
 <?php 
 
 require (  "../setting_func.php" );
-include ( get_functions_dir() . "/dbconfig.php" );
-include ( get_functions_dir() . "/common.php" );
-include ( get_functions_dir() . "/session.php" );
-include ( get_functions_dir() . "/user.php" );
-include ( get_views_dir() . "/navbar.php" );
+include ( get_require_dir() . "/dbconfig.php" );
+include ( get_require_dir() . "/common.php" );
+include ( get_require_dir() . "/session.php" );
+include ( get_require_dir() . "/user.php" );
+include ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
 if ( isset( $_POST['action'] ) ) {

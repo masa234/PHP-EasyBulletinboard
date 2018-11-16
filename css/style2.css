@@ -1,0 +1,84 @@
+
+body {
+    background-color: #FFE4B5 !important;
+    font-weight: bold;
+    /* font-family: 'Helvetica Neue','Helvetica','Arial',cursive; */
+    /* font-family: 'Avenir','Helvetica Neue','Helvetica','Arial','Hiragino Sans','ヒラギノ角ゴシック',YuGothic,'Yu Gothic','メイリオ', Meiryo,'ＭＳ Ｐゴシック','MS PGothic',cursive; */
+    color: black;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.container:first-child {
+    margin-top: 0px
+} 
+
+.container {
+    margin-top: 40px;
+}
+
+.card {
+    border-radius: 0px !important;
+}
+
+.jumbotron {
+    background-color: #fff !important;
+    border-radius: 50px;
+    box-shadow: -5px 6px gray inset;
+}
+
+.jumbotron:hover {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+    -ms-transform: scale(1.01);
+    transform: scale(1.01);
+}
+
+.form-control {
+    border-radius: 0px !important;
+}
+
+.img-circle {
+    border-radius: 50px;
+}
+
+.card {
+    border-radius: 15px !important; 
+}
+
+.alert {
+    padding: 30px !important;
+    font-weight: bolder !important;
+    font-size: 25px !important;
+    border-radius: 15px !important;
+}
+
+.card--extend {
+    background-color: #fff !important;
+    border-radius: 50px;
+    box-shadow: -5px 6px gray inset;
+    font-size: 30px;
+}
+
+.card--extend:hover {
+    -webkit-transform: scale(1.01);
+    -moz-transform: scale(1.01);
+    -o-transform: scale(1.01);
+    -ms-transform: scale(1.01);
+    transform: scale(1.01);
+}
+
+.post-content, .user-content {
+    font-size: 60px;
+}
+
+.post-image, .user-image {
+    border-radius: 50%;
+    float: right;
+    box-shadow: 2px 2px 4px;
+    width: 250px;
+    height: 250px;
+}

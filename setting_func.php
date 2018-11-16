@@ -1,6 +1,6 @@
 <?php
 
-function get_functions_dir(){
+function get_require_dir(){
     return dirname( __FILE__ ) . '/require';
 }
 

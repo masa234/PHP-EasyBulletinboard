@@ -14,7 +14,6 @@
                     <?php elseif ( isset( $post['title'] ) ): ?>
                     value="<?php print h( $post['title'] ); ?>"
                     <?php else: ?>
-                    value=""
                     <?php endif; ?>"/required>
                 </div>
                 <?php if ( isset( $_POST['content'] ) ): ?> 
