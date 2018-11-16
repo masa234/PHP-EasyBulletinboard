@@ -7,7 +7,7 @@ var_dump( $_SESSION );
 
 
 // ユーザ新規登録画面、ログイン画面のどちらかかつログアウトページでない場合
-if ( $fname == 'authenticate' || $fname == 'register' && $fname != 'signout') {
+if ( $fname == 'authenticate' || $fname == 'register' ) {
     if ( isAuthenticated() ) {
         header( "Location: root.php" );
         exit();
@@ -52,6 +52,7 @@ function authenticate( $user_name, $password ) {
         $user_name = $row['user_name'];
         $nickname = $row['nickname'];
         $email = $row['email'];
+        $image = $row['image'];
         $db_password = $row['password'];
     }
 

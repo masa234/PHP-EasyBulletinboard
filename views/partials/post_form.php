@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header"><h1><?php print( TEXT );?></h1></div>
         <div class="card-body">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <?php if ( isset( $post['id'] ) ): ?>
                 <input type="hidden" name="post_id" value="<?php print h( $post['id'] ); ?>">
                 <?php endif; ?>
@@ -29,6 +29,7 @@
                     <textarea placeholder="本文を200文字以内で入力してください" rows="5" class="form-control" name="content" 
                     /required><?php print h( $textarea_value ); ?></textarea>
                 </div>
+                <input type="file" name="image">
                 <button type="submit" class="btn btn-info" name="action">Submit</button>
             </form>
         </div>

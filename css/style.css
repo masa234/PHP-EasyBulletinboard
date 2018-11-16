@@ -64,3 +64,15 @@ body {
     -ms-transform: scale(1.01);
     transform: scale(1.01);
 }
+
+.post-content, .user-content {
+    font-size: 60px;
+}
+
+.post-image, .user-image {
+    border-radius: 50%;
+    float: right;
+    box-shadow: 2px 2px 4px;
+    width: 250px;
+    height: 250px;
+}

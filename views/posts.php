@@ -9,7 +9,14 @@ include ( get_views_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
 if ( isset( $_POST['action'] ) ) {
-    post_register( $_POST['title'], $_POST['content'] );
+    if ( isset( $_FILES["image"] ) && is_uploaded_file( $_FILES["image"]["tmp_name"] ) ) {
+        
+        if ( $filename = image_upload( $_FILES["image"] ) ) {
+            post_insertOrUpdate( 'insert' , $_POST['title'], $_POST['content'], $filename );
+        }
+    }  else {
+        message_display( 'danger',  'ファイルの選択をお願い致します。' );
+    }
 }
 
 if ( isset( $_POST['post_delete'] ) ) {
@@ -20,7 +27,7 @@ define( "TEXT", "新規投稿" );
 
 require ( get_partials_dir() . "/post_form.php" );
 
-$posts = post_all();
+$posts = get_all( 'posts', 'updated_at', 'DESC' );
 
 foreach ( $posts as $post ) {
     require ( get_partials_dir() . "/post.php" );

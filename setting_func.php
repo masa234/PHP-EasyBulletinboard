@@ -1,7 +1,7 @@
 <?php
 
 function get_functions_dir(){
-    return dirname( __FILE__ ) . '/functions';
+    return dirname( __FILE__ ) . '/require';
 }
 
 function get_views_dir(){

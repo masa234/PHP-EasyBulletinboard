@@ -10,18 +10,18 @@ include ( get_views_dir() . "/navbar.php" );
 // submitボタンが押された場合の処理
 if ( isset( $_POST['action'] ) ) {
     if ( isset( $_FILES['image'] ) && is_uploaded_file( $_FILES['image']['tmp_name'] ) ) {
-
-        if ( $filename = image_upload( $_FILES['image'] ) ) {
-            user_insertOrUpdate( 'insert', $_POST['user_name'], $_POST['nickname'], $_POST['email'], $_POST['password'], $filename );
-        }
+        
+        $filename = image_upload( $_FILES['image'] );
     } else {
-        message_display( 'danger',  'ファイルの選択をお願い致します。' );
+        $filename = session_get( 'image' );
     }
+
+    user_insertOrUpdate( 'insert', $_POST['user_name'], $_POST['nickname'], $_POST['email'], $_POST['password'], $filename );
 }
 
-define( "FORMTITLE", "アカウント作成" );
-define( "BUTTONTEXT", "アカウントを作成する" );
-define( "URL", "authenticate.php" );
-define( "LINKTEXT", "ログインはこちら" );
+define( "FORMTITLE", "ユーザ情報を編集する" );
+define( "BUTTONTEXT", "ユーザ情報を更新する" );
+define( "URL", "users.php" );
+define( "LINKTEXT", "ユーザ一覧はこちら" );
 
 require ( get_partials_dir() . "/user_form.php" );

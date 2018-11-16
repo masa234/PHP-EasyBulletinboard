@@ -57,6 +57,12 @@
         </li>
         <?php else: ?>
         <li class="nav-item">
+          <a class="nav-link text-white" href="user_edit.php">ユーザ情報編集</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="users.php">ユーザ一覧</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-white" href="posts.php">新規投稿</a>
         </li>
         <li class="nav-item">
