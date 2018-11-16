@@ -141,7 +141,6 @@ function image_upload( $files ) {
         }
     } catch (Exception $e) {
         message_display( 'danger',  $e->getMessage() );
-        return null; // アップロードに失敗したためfilepathはnull
     }
 }
 
