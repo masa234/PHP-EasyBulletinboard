@@ -1,17 +1,17 @@
 <?php
 
 require (  "../setting_func.php" );
-include ( get_require_dir() . "/dbconfig.php" );
-include ( get_require_dir() . "/common.php" );
-include ( get_require_dir() . "/session.php" );
-include ( get_require_dir() . "/post.php" );
-include ( get_require_dir() . "/navbar.php" );
+require ( get_require_dir() . "/dbconfig.php" );
+require ( get_require_dir() . "/common.php" );
+require ( get_require_dir() . "/session.php" );
+require ( get_require_dir() . "/post.php" );
+require ( get_require_dir() . "/navbar.php" );
 
 // getパラメータでidが入力されていてそれが数値の場合
 if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] )  
      && isCurrentUser( 'posts', $_REQUEST['id'] ) ) {
 
-        $post = get_post( $_REQUEST['id'] );
+    $post = get_post( $_REQUEST['id'] );
 } else {
     header( "Location:posts.php" );
     exit();
