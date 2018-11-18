@@ -1,7 +1,10 @@
 <div class="container">
     <div class="card card--extend">
     <div class="card-body">
-        <img src="../images/<?php print h( $post['image'] ) ?>" class="img-circle post-image" alt="...">
+        <?php $post_image = '../images/' . $post['image']; ?>
+        <?php if ( file_exists( $post_image ) && ! is_dir( $post_image ) ): ?>
+        <img src=<?php print h( $post_image ) ?> class="img-circle post-image" alt="...">
+        <?php endif; ?> 
         <h1 class="card-title"><?php print h( $post['title'] ); ?></h1>
         <p class="card-body">
         <div class ="post-content">

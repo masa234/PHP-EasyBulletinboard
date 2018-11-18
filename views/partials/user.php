@@ -1,7 +1,10 @@
 <div class="container">
     <div class="card card--extend">
     <div class="card-body">
-        <img src="../images/<?php print h( $user['image'] ) ?>" class="img-circle user-image" alt="...">
+        <?php $user_image = '../images/' . $user['image']; ?>
+        <?php if ( file_exists( $user_image ) &&  ! is_dir( $user_image ) ): ?>
+        <img src=<?php print h( $user_image ) ?> class="img-circle user-image" alt="...">
+        <?php endif; ?>
         <h1 class="card-title">@<?php print h( $user['nickname'] ); ?></h1>
         <p class="card-body">
         <div class ="user-content">

@@ -27,7 +27,7 @@ define( "TEXT", "新規投稿" );
 
 require ( get_partials_dir() . "/post_form.php" );
 
-$posts = get_all( 'posts', 'updated_at', 'DESC' );
+$posts = pagination( 'posts', 'updated_at', 'DESC', 10 );
 
 foreach ( $posts as $post ) {
     require ( get_partials_dir() . "/post.php" );

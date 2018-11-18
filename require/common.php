@@ -25,17 +25,60 @@ function query( $query ) {
     return $result;
 }   
 
-// ex: get_all( 'posts', 'updated_at', 'DESC' );
-function get_all( $table, $column, $order ) {
-    
+function pagination( $table, $column ,$order, $limit ) {
+
+    if ( isset( $_REQUEST['page'] ) ) {
+        if ( ! is_numeric( $_REQUEST['page'] ) ) {
+            // string型
+            message_display( 'danger', 'pageパラメータは数値を指定してください' );
+            exit();
+        } else {
+            $page = $_REQUEST['page'];
+        }
+    } else {
+        $page =1;
+    }
+
     $query = "
-        SELECT * FROM $table
-        ORDER BY $column $order
-        ";
+	        SELECT *
+	        FROM $table
+            ";
 
     $result = query( $query );
 
-    $datas = array();
+    $data_count = mysqli_num_rows( $result );
+    $page_count = ceil( $data_count / $limit );
+
+    if ( $page > 0  && $page <= $page_count  ) {
+        $start = ( $page * $limit ) - $limit; 
+    } else {
+        message_display( 'warning', $page . 'ページ目は存在しなかったので1ページ目を表示しています' );
+        $start = 0;
+    }
+    
+    ?>
+
+    <ul class="pagination pagination-lg">
+        <?php for ( $i=1; $i <= $page_count; $i++ ): ?>
+            <?php if ( $i != $page ): ?>
+            <li class="page-item">
+            <?php else: ?>
+            <li class="page-item disabled">
+            <?php endif; ?>
+                <a class="page-link" href="?page=<?php print $i ?>"><?php print $i; ?></a>
+            </li>
+        <?php endfor; ?> 
+    </ul>
+    <?php 
+
+    $query = "
+	    SELECT  *
+        FROM $table
+        ORDER BY $column $order
+        LIMIT $start, $limit
+        ";
+
+    $result = query( $query );
 
     while ($row = $result->fetch_assoc()) {
         $datas[] = $row;
@@ -103,17 +146,17 @@ function image_upload( $files ) {
     try {
         // フォーム改ざん時、発生するエラーを探知
         if ( ! isset( $files['error'] ) || !is_int( $files['error'] ) ) {
-            throw new Exception('パラメータが不正です');
+            throw new RuntimeException('パラメータが不正です');
         } switch ( $files['error'] ) {
             case UPLOAD_ERR_OK: // OK
                 break;
             case UPLOAD_ERR_NO_FILE:   // ファイル未選択
-                throw new Exception('ファイルが選択されていません');
+                throw new RuntimeException('ファイルが選択されていません');
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                throw new Exception( 'ファイルサイズが大きすぎます' );
+                throw new RuntimeException( 'ファイルサイズが大きすぎます' );
             default:
-                throw new Exception( 'その他のエラーが発生しました' );
+                throw new RuntimeException( 'その他のエラーが発生しました' );
         }
 
         if ( ! $ext = array_search( 
@@ -121,26 +164,27 @@ function image_upload( $files ) {
             array( 'gif', 'jpeg', 'png',
              )
         )) {
-            throw new Exception( 'ファイルの形式エラーです' );
+            throw new RuntimeException( 'ファイルの形式エラーです' );
         }
 
         if ( $vertical > 600 || $holizontal > 600 ) {
-            throw new Exception( '画像が大きすぎます' );
+            throw new RuntimeException( '画像が大きすぎます' );
         }
 
-
-        if ( ! file_exists( '../images' ) ) {
-            mkdir( '../images' );
-        }
-
-        $filename = date( 'YmdHis' ) . sha1( true ) . '.' . $extension;
-
-        if ( move_uploaded_file ( $_FILES["image"]["tmp_name"], "../images/" . $filename ) ) {
-            chmod( '../images/' . $filename , 0644 );
-            return $filename;
-        }
-    } catch (Exception $e) {
+    } catch (RuntimeException $e) {
         message_display( 'danger',  $e->getMessage() );
+        return;
+    }
+
+    if ( ! file_exists( '../images' ) ) {
+        mkdir( '../images' );
+    }
+
+    $filename = date( 'YmdHis' ) . sha1( true ) . '.' . $extension;
+
+    if ( move_uploaded_file ( $_FILES["image"]["tmp_name"], "../images/" . $filename ) ) {
+        chmod( '../images/' . $filename , 0644 );
+        return $filename;
     }
 }
 
@@ -160,7 +204,7 @@ function message_display( $type , $message ) {
     ?>
     <div class="container">
         <div class="alert alert-dismissible alert-<?php print ( $type ) ?>">
-        <?php print $message; ?>
+        <?php print h( $message ); ?>
         </div>
     </div>
     <?php

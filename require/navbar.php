@@ -42,28 +42,6 @@
 
     </script>
   </head>
-<script type="text/javascript">
-  function check(){
-
-    if( window.confirm( 'Are you sure?' ) ){
-
-      return true;
-
-    } else{
-
-      return false;
-
-    }
-
-  }
-
-  function countLength( text, field, count ) {
-  
-    document.getElementById( field ).innerHTML = text.length;
-
-  } 
-
-</script>
 <body>
   <!-- Sidebar navigation-->
   <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">

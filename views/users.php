@@ -7,7 +7,7 @@ require ( get_require_dir() . "/session.php" );
 require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/navbar.php" );
 
-$users = get_all( 'users', 'id', 'DESC' );
+$users = pagination( 'users', 'id', 'DESC', 10 );
 
 foreach ( $users as $user ) {
     require ( get_partials_dir() . "/user.php" );

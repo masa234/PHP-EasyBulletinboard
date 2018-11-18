@@ -79,8 +79,8 @@ function user_validation( $user_name, $nickname, $email, $password ) {
 
     if ( ! mb_strlen( $password ) ) {
         $errors[] = "passwordが空です";
-    } else if ( ! preg_match( '/^[0-9a-z]{5,15}$/', trim( $password ) ) ) {
-        $errors[] = "passwordは半角英数字5文字から15文字以内でお願いします";
+    } else if ( ! preg_match( '/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]{5,15}+\z/', trim( $password ) ) ) {
+        $errors[] = "passwordは半角英小文字大文字数字をそれぞれ1種類以上含む5文字以上15文字以下でお願いします";
     } else if ( is_numeric( $password ) ) {
         $errors[] = "passwordは文字列でなくてはいけません";
     }
