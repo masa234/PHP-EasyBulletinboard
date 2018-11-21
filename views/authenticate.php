@@ -8,7 +8,7 @@ require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
 if ( isset( $_POST['action'] ) ) {
-    authenticate( $_POST['user_name'], $_POST['password'] );
+    authenticate( $_POST['nickname'], $_POST['password'] );
 }
 
 define( "FORMTITLE", "ログインはこちら" );

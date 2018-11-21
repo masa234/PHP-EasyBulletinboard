@@ -8,7 +8,6 @@ function query( $query ) {
     $mysqli = get_db();
 
     $result = $mysqli->query( $query );
-    var_dump( $query );
 
     if ( ! $result ) {
         print 'クエリが失敗しました' . "Errormessage: %s\n" . $mysqli->error;
@@ -25,7 +24,7 @@ function query( $query ) {
     return $result;
 }   
 
-function pagination( $table, $column ,$order, $limit ) {
+function pagination( $table, $column ,$order, $limit, $where = null ) {
 
     if ( isset( $_REQUEST['page'] ) ) {
         if ( ! is_numeric( $_REQUEST['page'] ) ) {
@@ -47,6 +46,11 @@ function pagination( $table, $column ,$order, $limit ) {
     $result = query( $query );
 
     $data_count = mysqli_num_rows( $result );
+
+    if ( $data_count == 0 ) {
+        return array(); // データが存在しない場合は空の配列を返す
+    }
+
     $page_count = ceil( $data_count / $limit );
 
     if ( $page > 0  && $page <= $page_count  ) {
@@ -55,9 +59,9 @@ function pagination( $table, $column ,$order, $limit ) {
         message_display( 'warning', $page . 'ページ目は存在しなかったので1ページ目を表示しています' );
         $start = 0;
     }
-    
     ?>
 
+    <?php if ( $page > 1 ): ?>
     <ul class="pagination pagination-lg">
         <?php for ( $i=1; $i <= $page_count; $i++ ): ?>
             <?php if ( $i != $page ): ?>
@@ -69,16 +73,21 @@ function pagination( $table, $column ,$order, $limit ) {
             </li>
         <?php endfor; ?> 
     </ul>
+    <?php endif; ?>
     <?php 
 
     $query = "
-	    SELECT  *
+        SELECT  *
         FROM $table
+        $where
         ORDER BY $column $order
         LIMIT $start, $limit
         ";
+        var_dump( $query );
 
     $result = query( $query );
+
+    $datas = array();
 
     while ($row = $result->fetch_assoc()) {
         $datas[] = $row;
@@ -102,9 +111,11 @@ function isUniq( $table, $column, $value ) {
     $result = query( $query );
 
     if ( mysqli_num_rows( $result ) == 0  ) {
+        $result->close();
         return true;
     }
 
+    $result->close();
     return false;
 }
 
@@ -140,7 +151,6 @@ function get_current_datetime() {
 
 function image_upload( $files ) {
     $extension = substr( mime_content_type( $files["tmp_name"] ) , 6 ); // ファイルの拡張子
-    var_dump( $extension );
     list( $vertical, $holizontal ) = getimagesize( $files["tmp_name"] );
 
     try {
@@ -182,7 +192,7 @@ function image_upload( $files ) {
 
     $filename = date( 'YmdHis' ) . sha1( true ) . '.' . $extension;
 
-    if ( move_uploaded_file ( $_FILES["image"]["tmp_name"], "../images/" . $filename ) ) {
+    if ( move_uploaded_file ( $files["tmp_name"], "../images/" . $filename ) ) {
         chmod( '../images/' . $filename , 0644 );
         return $filename;
     }

@@ -19,7 +19,7 @@ if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] )
 
 if ( isset( $_POST['action'] ) ) {
     if( isset( $_FILES['image'] ) && is_uploaded_file( $_FILES["image"]["tmp_name"] ) ) {
-        // ユーザのイメージ画像にしたい画像が送られてきた場合
+        // postのイメージ画像にしたい画像が送られてきた場合
         $filename = image_upload( $_FILES["image"] );
     } else {
         // 画像が選択されていない場合（画像は変更しない）

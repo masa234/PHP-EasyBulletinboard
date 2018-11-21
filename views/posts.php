@@ -28,7 +28,10 @@ define( "TEXT", "新規投稿" );
 require ( get_partials_dir() . "/post_form.php" );
 
 $posts = pagination( 'posts', 'updated_at', 'DESC', 10 );
+?>
 
-foreach ( $posts as $post ) {
-    require ( get_partials_dir() . "/post.php" );
-}
+<?php if ( count( $posts ) > 0 ): ?>
+<?php foreach ( $posts as $post ): ?> 
+<?php require ( get_partials_dir() . "/post.php" ); ?>
+<?php endforeach; ?>
+<?php endif; ?>

@@ -12,7 +12,11 @@ body {
 }
 
 .container:first-child {
-    margin-top: 0px
+    margin-top: 50px
+} 
+
+.container:last-child {
+    margin-bottom: 50px
 } 
 
 .container {
@@ -81,4 +85,16 @@ body {
     box-shadow: 2px 2px 4px;
     width: 250px;
     height: 250px;
+}
+
+.user-link {
+    color: black;
+}
+
+.user-link:hover {
+    color: black;
+}
+
+.pagination {
+    margin-top: 20px;
 }

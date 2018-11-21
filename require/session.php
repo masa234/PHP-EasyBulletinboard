@@ -3,13 +3,12 @@
 session_start();
 session_regenerate_id();
 $fname = basename( $_SERVER['PHP_SELF'] , ".php");
-var_dump( $_SESSION );
 
 
 // ユーザ新規登録画面、ログイン画面のどちらかかつログアウトページでない場合
 if ( $fname == 'authenticate' || $fname == 'register' ) {
     if ( isAuthenticated() ) {
-        header( "Location: root.php" );
+        header( "Location: posts.php" );
         exit();
     } 
 // ユーザ新規登録画面、ログイン画面以外
@@ -30,14 +29,14 @@ if ( $fname == 'authenticate' || $fname == 'register' ) {
     }
 } 
 
-function authenticate( $user_name, $password ) {
+function authenticate( $nickname, $password ) {
 
-    $user_name = escape( $user_name );
+    $nickname = escape( $nickname );
     $password = escape( $password );
 
     $query = "
         SELECT * FROM users 
-        WHERE user_name='$user_name'
+        WHERE nickname='$nickname'
         ";
 
     $result = query( $query );
@@ -53,6 +52,7 @@ function authenticate( $user_name, $password ) {
         $nickname = $row['nickname'];
         $email = $row['email'];
         $image = $row['image'];
+        $admin = $row['admin'];
         $db_password = $row['password'];
     }
 
@@ -65,6 +65,7 @@ function authenticate( $user_name, $password ) {
         session_set( 'nickname', $nickname );
         session_set( 'email', $email );
         session_set( 'password', $db_password );
+        session_set( 'admin', $admin );
         session_set( 'session_created_at', strtotime( 'now' ) );
         session_regenerate_id( true );
         header( "Location: posts.php" );
@@ -85,17 +86,9 @@ function session_clear() {
 // ログインしていればtrueを返却、していなければfalseを返却
 function isAuthenticated()
 {
-    if ( isset( $_SESSION['user_name'] ) ) {
-        return true;
-    }
-
-    return false;
+    return isset( $_SESSION['user_id'] );
 }
 
 function session_get( $key ) {
-    if ( isset( $_SESSION[$key] ) ) {
-        return $_SESSION[$key];
-    } 
-
-    return null;
+    return isset( $_SESSION[$key] ) ? $_SESSION[$key] : null;
 }

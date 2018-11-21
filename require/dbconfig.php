@@ -28,6 +28,6 @@ function get_db() {
 function escape( $str ) {
     $mysqli = get_db();
 
-    return $mysqli->real_escape_string( $str );
+    return $mysqli->real_escape_string( trim( $str ) );
 }
 

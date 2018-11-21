@@ -61,21 +61,21 @@ function post_validation( $title, $content, $post_id = null ) {
 
     if ( ! mb_strlen( $title ) ) {
         $errors[] = "タイトルが空です";
-    } else if ( mb_strlen( trim( $title ) ) > 30 ) {
+    } else if ( is_numeric( $title ) ) {
+        $errors[] = "タイトルは文字列でなくてはいけません";
+    } else if ( mb_strlen( $title ) > 30 ) {
         $errors[] = "タイトルは30文字以内で入力してください";
     } else if ( ! isUniq( 'posts', 'title', $title ) // 第一条件は、入力したタイトルが一意の場合,true
                 && $title != $post['title'] ) { // 第二条件はinsert時は常にtrue, update時は編集するpostとタイトルを指定した場合true
         $errors[] = "違うタイトルを指定してください";
-    } else if ( is_numeric( $title ) ) {
-        $errors[] = "タイトルは文字列でなくてはいけません";
     }
 
     if ( ! mb_strlen( $content ) ) {
         $errors[] = "本文が空です";
-    } else if ( mb_strlen( trim( $content ) ) > 200 ) {
-        $errors[] = "本文は200文字以内で入力してください";
     } else if ( is_numeric( $content ) ) {
-        $errors[] = "本文は文字列でなくてはいけません";
+        $errors[] = "タイトルは文字列でなくてはいけません";
+    } else if ( mb_strlen( $content ) > 200 ) {
+        $errors[] = "本文は200文字以内で入力してください";
     }
 
     return $errors;

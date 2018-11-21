@@ -16,7 +16,7 @@ if ( isset( $_POST['action'] ) ) {
         $filename = session_get( 'image' );
     }
 
-    user_insertOrUpdate( 'insert', $_POST['user_name'], $_POST['nickname'], $_POST['email'], $_POST['password'], $filename );
+    user_insertOrUpdate( 'update', $_POST['user_name'], $_POST['nickname'], $_POST['email'], $_POST['password'], $filename );
 }
 
 define( "FORMTITLE", "ユーザ情報を編集する" );

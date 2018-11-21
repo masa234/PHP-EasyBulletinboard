@@ -2,10 +2,11 @@
 <body>
   <div class="container">
     <div class="col-xs-8 col-xs-offset-2">
-      <div class="card border-info">
-          <div class="card-header h1"><?php print ( FORMTITLE ); ?></div>
-          <div class="card-body">
+      <div class=" border-info">
+          <div class="-header h1"><?php print ( FORMTITLE ); ?></div>
+          <div class="-body">
             <form method="POST" <?php if ( $fname != 'authenticate' ): ?>enctype="multipart/form-data"<?php endif; ?> >
+              <?php if ( $fname != 'authenticate' ): ?>
               <div class="form-group">
                 <p>ユーザ名</p>
                 <input type="text"  class="form-control" name="user_name" placeholder="お名前を10文字以内で入力してください" 
@@ -17,10 +18,10 @@
                 <?php endif; ?>
                 " required />
               </div>
-              <?php if ( $fname != 'authenticate' ): ?>
+              <?php endif; ?>
               <div class="form-group">
                 <p>ニックネーム</p>
-                <input type="text"  class="form-control" name="nickname" placeholder="nicknameを入力してください" 
+                <input type="text"  class="form-control" name="nickname" placeholder="nicknameを半角英字と半角数字の組み合わせのみの5文字以上15文字以下で入力してください" 
                 <?php if ( isset( $_POST['nickname'] ) ): ?> 
                 value ="<?php print h( $_POST['nickname'] ); ?>"
                 <?php elseif ( session_get( 'nickname' ) ):?>
@@ -29,6 +30,7 @@
                 <?php endif; ?>
                 " required />
               </div>
+              <?php if ( $fname != 'authenticate' ): ?>
               <div class="form-group">
                 <p>メールアドレス</p>
                 <input type="email"  class="form-control" name="email" placeholder="Emailで入力してください" 
