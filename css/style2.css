@@ -8,7 +8,7 @@ body {
 }
 
 .btn {
-    border-radius: 0px;
+    /* border-radius: 0px; */
 }
 
 .container:first-child {
@@ -42,7 +42,7 @@ body {
 }
 
 .form-control {
-    border-radius: 0px !important;
+    /* border-radius: 0px !important; */
 }
 
 .img-circle {
@@ -97,4 +97,8 @@ body {
 
 .pagination {
     margin-top: 20px;
+}
+
+form {
+    display: inline !important;
 }

@@ -6,7 +6,7 @@ function user_insertOrUpdate( $order ,$user_name, $nickname, $email, $password, 
     $user_name = escape( $user_name );
     $nickname = escape( $nickname );
     $email = escape( $email );
-    $password = escape( $password );
+    $password = escape( $password );  
 
     $errors = user_validation( $user_name, $nickname, $email, $password );
 
@@ -35,7 +35,7 @@ function user_insertOrUpdate( $order ,$user_name, $nickname, $email, $password, 
                     user_name = '$user_name',
                     nickname =  '$nickname',
                     email= '$email',
-                    image = '$image',
+                    image = '$filename',
                     password = '$password'
                     WHERE id = '$user_id'
                 ";
@@ -45,7 +45,8 @@ function user_insertOrUpdate( $order ,$user_name, $nickname, $email, $password, 
     
     query( $query );
 
-    message_display( 'success' , 'ユーザの作成に成功しました' );
+    print $result['message'];
+    message_display( 'success' ,  $message );
 }
 
 function user_delete( $user_id ) {
@@ -124,7 +125,9 @@ function is_Admin() {
             WHERE id ='$user_id'
             ";
 
-    $result = query( $query );
+    $mysqli = get_db();
+
+    $result = $mysqli->query( $query );
 
     while ($row = $result->fetch_assoc()) {
         $admin = $row['admin'];
@@ -141,7 +144,9 @@ function get_user( $user_id ) {
         WHERE id = '$user_id'
         ";
     
-    $result = query( $query );
+    $mysqli = get_db();
+
+    $result = $mysqli->query( $query );
 
     $user = array();
 

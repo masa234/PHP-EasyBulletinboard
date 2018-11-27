@@ -5,6 +5,7 @@ require ( get_require_dir() . "/dbconfig.php" );
 require ( get_require_dir() . "/common.php" );
 require ( get_require_dir() . "/session.php" );
 require ( get_require_dir() . "/post.php" );
+require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
@@ -23,11 +24,22 @@ if ( isset( $_POST['post_delete'] ) ) {
     post_delete( $_POST['post_id'] );
 }
 
+if ( isset( $_POST['like'] ) ) {
+    like( $_POST['post_id'] );
+}
+
+if ( isset( $_POST['unlike'] ) ) {
+    unlike( $_POST['post_id'] );
+}
+
+
 define( "TEXT", "新規投稿" );
 
 require ( get_partials_dir() . "/post_form.php" );
 
-$posts = pagination( 'posts', 'updated_at', 'DESC', 10 );
+$query = "SELECT * FROM posts ORDER BY updated_at DESC";
+$result = query( $query );
+$posts = pagination( $result['datas'], 10 );
 ?>
 
 <?php if ( count( $posts ) > 0 ): ?>

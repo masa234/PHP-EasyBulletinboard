@@ -89,7 +89,9 @@ function get_post( $post_id ) {
         WHERE id = '$post_id'
         ";
     
-    $result = query( $query );
+    $mysqli = get_db();
+
+    $result = $mysqli->query( $query );
 
     $post = array();
 

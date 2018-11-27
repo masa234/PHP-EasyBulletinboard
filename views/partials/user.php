@@ -1,3 +1,4 @@
+<?php var_dump( $user ) ?>
 <div class="container">
     <div class="card card--extend">
         <div class="card-body">
@@ -9,7 +10,8 @@
             <h1 class="card-title">@<?php print h( $user['nickname'] ); ?></h1>
             <p class="card-body">
             follower:<?php print h ( get_relationship_count( 'follower' ,$user['id'] ) ); ?><br>
-            following:<?php print h ( get_relationship_count( 'following' ,$user['id'] ) ); ?>
+            following:<?php print h ( get_relationship_count( 'following' ,$user['id'] ) ); ?><br>
+            like:<?php print h ( get_like_posts( $user['id'], 'count' ) ); ?>
             </a>
             <?php if( !  is_Current_user( $user['id'] ) ): ?>
             <?php if ( ! is_following( $user['id'] ) ): ?>
@@ -26,7 +28,7 @@
             <?php if ( is_Admin() ): ?>
             <form method="POST" action = "" onsubmit="return check();">
             <input type="hidden" name="user_id" value="<?php print h( $user['id'] ) ?>"/>
-            <button type="submit" class="btn btn-danger btn-lg" name= "action" >削除する</button>
+            <button type="submit" class="btn btn-danger btn-lg" name= "action" ><?php print h( $user['user_name'] ) ?>を削除する</button>
             <?php endif; ?>
             <?php endif; ?>
             </p>

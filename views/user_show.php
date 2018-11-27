@@ -6,7 +6,15 @@ require ( get_require_dir() . "/common.php" );
 require ( get_require_dir() . "/session.php" );
 require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/following.php" );
+require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/navbar.php" );
+
+if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
+    $user = get_user( $_REQUEST['id'] );
+} else {
+    header( "Location:users.php" );
+    exit();
+}    
 
 if ( isset( $_POST['action'] ) ) {
     user_delete( $_POST['user_id'] );
@@ -20,12 +28,13 @@ if ( isset( $_POST['unfollow'] ) ) {
     unfollow( $_POST['user_id'] );
 }
 
-if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
-    $user = get_user( $_REQUEST['id'] );
-} else {
-    header( "Location:users.php" );
-    exit();
-}    
+if ( isset( $_POST['like'] ) ) {
+    like( $_POST['post_id'] );
+}
+
+if ( isset( $_POST['unlike'] ) ) {
+    unlike( $_POST['post_id'] );
+}
 
 require ( get_partials_dir() . "/user.php" );
 
@@ -37,16 +46,16 @@ require ( get_partials_dir() . "/user.php" );
     <div class="bs-component">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a href="#tab1" class="nav-link" data-toggle="tab" >Posts</a>
+                <a href="#tab1" class="nav-link" data-toggle="tab">Posts</a>
             </li>
             <li class="nav-item">
-                <a href="#tab2" class="nav-link" data-toggle="tab" href="#profile">Following</a>
+                <a href="#tab2" class="nav-link" data-toggle="tab">Following</a>
             </li>
             <li class="nav-item">
-                <a href="#tab3" class="nav-link" data-toggle="tab" href="#profile">Follower</a>
+                <a href="#tab3" class="nav-link" data-toggle="tab">Follower</a>
             </li>
-            <li class="nav-item dropdown">
-                <a href="#tab4" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Like</a>
+            <li class="nav-item">
+                <a href="#tab4" class="nav-link" data-toggle="tab">Like</a>
             </li>
         </ul>
     </div>
@@ -59,7 +68,9 @@ require ( get_partials_dir() . "/user.php" );
     <div class="tab-content">
         <div class="tab-pane active" id="tab1">
         <?php
-        $posts = pagination( 'posts', 'updated_at', 'DESC', 10, 'WHERE user_id = ' .$user_id );
+        $query = "SELECT * FROM posts WHERE user_id = '$user_id' ORDER BY updated_at DESC";
+        $result = query( $query );
+        $posts = pagination( $result['datas'] );
         ?>
         <h1>Post:<?php print( count( $posts ) ); ?></h1>
         <?php if ( count( $posts ) > 0 ): ?>
@@ -71,12 +82,12 @@ require ( get_partials_dir() . "/user.php" );
 
         <div class="tab-pane" id="tab2">
         <?php
-        $users = get_relationships( 'following' , $user_id );
-        // $users = pagination( 'followings', 'followed_id', 'DESC', 10, 'WHERE followed_id = ' .$user_id );
+        $followings = get_relationships( 'following' , $user_id );
+        $followings = pagination( $followings );
         ?>
-        <h1>Follower:<?php print( count( $users ) ); ?></h1>
-        <?php if ( count( $users ) > 0 ): ?>
-        <?php foreach ( $users as $user ): ?> 
+        <h1>Following:<?php print( count( $followings ) ); ?></h1>
+        <?php if ( count( $followings ) > 0 ): ?>
+        <?php foreach ( $followings as $user ): ?> 
         <?php require ( get_partials_dir() . "/user.php" ); ?>
         <?php endforeach; ?>
         <?php endif; ?>
@@ -84,16 +95,28 @@ require ( get_partials_dir() . "/user.php" );
 
         <div class="tab-pane" id="tab3">
         <?php
-        $users = get_relationships( 'follower' , $user_id );
-        // $users = pagination( 'followings', 'followed_id', 'DESC', 10, 'WHERE followed_id = ' .$user_id );
+        $followers = get_relationships( 'follower' , $user_id );
+        $followers = pagination( $followers );
         ?>
-        <h1>Follower:<?php print( count( $users ) ); ?></h1>
-        <?php if ( count( $users ) > 0 ): ?>
-        <?php foreach ( $users as $user ): ?> 
+        <h1>Follower:<?php print( count( $followers ) ); ?></h1>
+        <?php if ( count( $followers ) > 0 ): ?>
+        <?php foreach ( $followers as $user ): ?> 
         <?php require ( get_partials_dir() . "/user.php" ); ?>
         <?php endforeach; ?>
         <?php endif; ?>
         </div>
-        <div class="tab-pane" id="tab4">DDDD</div>
+
+        <div class="tab-pane" id="tab4">
+        <?php
+        $likes = get_like_posts( $user_id );
+        $likes = pagination( $likes );
+        ?>
+        <h1>Liked posts:<?php print( count( $likes ) ); ?></h1>
+        <?php if ( count( $likes ) > 0 ): ?>
+        <?php foreach ( $likes as $post ): ?> 
+        <?php require ( get_partials_dir() . "/post.php" ); ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
+        </div>
     </div>
 </div>

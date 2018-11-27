@@ -13,11 +13,7 @@ function is_following( $user_id ) {
 
     $result = query( $query );
 
-    if ( mysqli_num_rows( $result ) == '1' ) {
-        return true;
-    } 
-
-    return false;
+    return $result['count'] == '1';
 }
 
 function follow( $user_id ) {
@@ -83,7 +79,7 @@ function get_relationship_count( $type, $user_id ) {
 
     $result = query( $query );
 
-    return mysqli_num_rows( $result );
+    return $result['count'];
 }
 
 function get_relationships( $type ,$user_id ) {
@@ -122,11 +118,5 @@ function get_relationships( $type ,$user_id ) {
 
     $result = query( $query );
 
-    $users = array();
-
-    while ($row = $result->fetch_assoc()) {
-        $users[] = $row;
-    }
-
-    return $users;
+    return $result['datas'];
 }

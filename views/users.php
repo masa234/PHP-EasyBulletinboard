@@ -6,6 +6,7 @@ require ( get_require_dir() . "/common.php" );
 require ( get_require_dir() . "/session.php" );
 require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/following.php" );
+require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 if ( isset( $_POST['action'] ) ) {
@@ -20,7 +21,18 @@ if ( isset( $_POST['unfollow'] ) ) {
     unfollow( $_POST['user_id'] );
 }
 
-$users = pagination( 'users', 'id', 'DESC', 10 );
+if ( isset( $_POST['like'] ) ) {
+    like( $_POST['post_id'] );
+}
+
+if ( isset( $_POST['unlike'] ) ) {
+    unlike( $_POST['post_id'] );
+}
+
+$query = "SELECT * FROM users ORDER BY id DESC";
+$result = query( $query );
+
+$users = pagination( $result['datas'], 10 );
 
 ?>
 

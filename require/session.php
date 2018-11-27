@@ -39,7 +39,9 @@ function authenticate( $nickname, $password ) {
         WHERE nickname='$nickname'
         ";
 
-    $result = query( $query );
+    $mysqli = get_db();
+
+    $result = $mysqli->query( $query );
 
     if ( mysqli_num_rows( $result ) == 0 ) {
         message_display( 'danger' , 'ログインに失敗しました' );

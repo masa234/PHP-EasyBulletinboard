@@ -5,7 +5,7 @@
       <div class=" border-info">
           <div class="-header h1"><?php print ( FORMTITLE ); ?></div>
           <div class="-body">
-            <form method="POST" <?php if ( $fname != 'authenticate' ): ?>enctype="multipart/form-data"<?php endif; ?> >
+            <form class="needs-validation" method="POST" <?php if ( $fname != 'authenticate' ): ?>enctype="multipart/form-data"<?php endif; ?> novalidate>
               <?php if ( $fname != 'authenticate' ): ?>
               <div class="form-group">
                 <p>ユーザ名</p>
@@ -15,9 +15,9 @@
                 <?php elseif ( session_get( 'user_name' ) ):?>
                 value ="<?php print h( session_get( 'user_name' )  ); ?>"
                 <?php else: ?>
-                <?php endif; ?>
-                " required />
+                <?php endif; ?>" required />
               </div>
+
               <?php endif; ?>
               <div class="form-group">
                 <p>ニックネーム</p>

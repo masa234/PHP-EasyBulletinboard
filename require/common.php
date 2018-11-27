@@ -4,27 +4,59 @@ function h( $str ) {
     return htmlspecialchars( $str, ENT_QUOTES, 'UTF-8');
 }
 
-function query( $query ) {
+// query メソッド、デフォルトで連想配列を返却する
+function query( $query, $type = null ) {
     $mysqli = get_db();
 
     $result = $mysqli->query( $query );
 
     if ( ! $result ) {
-        print 'クエリが失敗しました' . "Errormessage: %s\n" . $mysqli->error;
-        $mysqli->close();
-        exit();
+
+        $response = array( 
+            'count'  => 0 , // 影響があった行の数
+            'result' => '',
+            'message' => 'query faied please confirmation your sql syntax and database infomation .',
+        );
     }
 
-    // insert文 delete文 update文
-    if ( is_bool( $result ) && $result == true ) {
-        // 結果セットを返さない場合
-        $mysqli->close(); // データベース切断
-    } 
+    // select文以外
+    if ( $result === TRUE ) {
 
-    return $result;
+        $response = array( 
+            'count'  => '', // 影響があった行の数
+            'datas' => '',
+            'message' => 'query success',
+        );
+    } else {
+
+        $datas = array();
+
+        while ($row = $result->fetch_assoc()) {
+            $datas[] = $row;
+        }
+
+        $response = array( 
+            'count'  => mysqli_num_rows( $result ), // 影響があった行の数
+            'datas' => $datas,
+            'message' => '',
+        );
+
+        $result->close();
+    }
+
+    if ( $type == 'json' ) {
+        return json_encode( $response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+    } else {
+        return $response;
+    }
 }   
 
-function pagination( $table, $column ,$order, $limit, $where = null ) {
+function pagination( $datas, $limit = 25 ) {
+
+    // ガード処理
+    if ( count( $datas ) == 0 ) {
+        return array();
+    }
 
     if ( isset( $_REQUEST['page'] ) ) {
         if ( ! is_numeric( $_REQUEST['page'] ) ) {
@@ -38,20 +70,7 @@ function pagination( $table, $column ,$order, $limit, $where = null ) {
         $page =1;
     }
 
-    $query = "
-	        SELECT *
-	        FROM $table
-            ";
-
-    $result = query( $query );
-
-    $data_count = mysqli_num_rows( $result );
-
-    if ( $data_count == 0 ) {
-        return array(); // データが存在しない場合は空の配列を返す
-    }
-
-    $page_count = ceil( $data_count / $limit );
+    $page_count = ceil( count( $datas ) / $limit );
 
     if ( $page > 0  && $page <= $page_count  ) {
         $start = ( $page * $limit ) - $limit; 
@@ -76,26 +95,14 @@ function pagination( $table, $column ,$order, $limit, $where = null ) {
     <?php endif; ?>
     <?php 
 
-    $query = "
-        SELECT  *
-        FROM $table
-        $where
-        ORDER BY $column $order
-        LIMIT $start, $limit
-        ";
-        var_dump( $query );
+    $response =  array();
 
-    $result = query( $query );
-
-    $datas = array();
-
-    while ($row = $result->fetch_assoc()) {
-        $datas[] = $row;
+    // 例： 総件数 84件 datas配列の83件目までループの対象になる
+    for ( $i = 0; $i <= $limit && $start +$i <= count( $datas ) -1; $i++ ) {
+        $response[] = $datas[$start+$i];
     }
-
-    $result->close();
     
-    return $datas;
+    return $response;
 }
 
 // テーブル名、カラム、値を指定してテーブルに、指定した値のレコードが存在するか判定
@@ -110,13 +117,7 @@ function isUniq( $table, $column, $value ) {
 
     $result = query( $query );
 
-    if ( mysqli_num_rows( $result ) == 0  ) {
-        $result->close();
-        return true;
-    }
-
-    $result->close();
-    return false;
+    return $result['count'] == 0;
 }
 
 function isCurrentUser( $table, $id ) {
@@ -132,13 +133,7 @@ function isCurrentUser( $table, $id ) {
 
     $result = query( $query );
 
-    if ( mysqli_num_rows( $result ) == 1 ) {
-        $result->close();
-        return true;
-    }
-
-    $result->close();
-    return false;
+    return $result['count'] == 1;
 }
 
 
@@ -199,15 +194,16 @@ function image_upload( $files ) {
 }
 
 function error_display( $errors ) {   
-    foreach ( $errors as $error ) {
-        ?>
-        <div class="container">
-            <div class="alert alert-dismissible alert-warning">
-            <?php print h( $error ) ?>
-            </div>
+    ?>
+    <div class="container">
+        <div class="alert alert-dismissible alert-warning">
+        <?php foreach ( $errors as $error ): ?>
+        <?php print h( $error ) ?>
+        <br>
+        <?php endforeach; ?> 
         </div>
-        <?php
-    }
+    </div>
+    <?php
 }
 
 function message_display( $type , $message ) {  
