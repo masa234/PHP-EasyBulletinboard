@@ -8,15 +8,13 @@ require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
-if ( isset( $_POST['action'] ) ) {
+if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
     if ( isset( $_FILES['image'] ) && is_uploaded_file( $_FILES['image']['tmp_name'] ) ) {
-
-        if ( $filename = image_upload( $_FILES['image'] ) ) {
-            user_insertOrUpdate( 'insert', $_POST['user_name'], $_POST['nickname'], $_POST['email'], $_POST['password'], $filename );
-        }
+        $filename = image_upload( $_FILES['image'] );
     } else {
-        message_display( 'danger',  'ファイルの選択をお願い致します。' );
+        $filename = null;
     }
+    user_insertOrUpdate( 'insert', get_Post( 'user_name' ), get_Post( 'nickname' ), get_Post( 'email' ), get_Post( 'password' ), $filename );
 }
 
 define( "FORMTITLE", "アカウント作成" );

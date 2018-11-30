@@ -3,7 +3,7 @@
 function is_following( $user_id ) {
 
     $user_id = escape( $user_id );
-    $current_user_id = session_get( 'user_id' );
+    $current_user_id = get_current_user_id();;
  
     $query = "
         SELECT * FROM followings
@@ -19,7 +19,7 @@ function is_following( $user_id ) {
 function follow( $user_id ) {
 
     $user_id = escape( $user_id );
-    $current_user_id = session_get( 'user_id' );
+    $current_user_id = get_current_user_id();;
 
     if ( is_following( $user_id ) || is_Current_user( $user_id ) ) {
         message_display( 'danger' , '失敗しました' );
@@ -41,7 +41,7 @@ function follow( $user_id ) {
 function unfollow( $user_id ) {
 
     $user_id = escape( $user_id );
-    $current_user_id = session_get( 'user_id' );
+    $current_user_id = session_get( 'id' );
 
     if ( ! is_following( $user_id ) || is_Current_user( $user_id ) ) {
         message_display( 'danger' , '失敗しました' );
@@ -85,7 +85,6 @@ function get_relationship_count( $type, $user_id ) {
 function get_relationships( $type ,$user_id ) {
 
     $user_id = escape( $user_id );
-    $current_user_id = session_get( 'user_id' );
 
     if ( $type == 'follower' ) {
         // ON は連結条件

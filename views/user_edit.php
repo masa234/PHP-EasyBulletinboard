@@ -8,16 +8,18 @@ require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
-if ( isset( $_POST['action'] ) ) {
-    if ( isset( $_FILES['image'] ) && is_uploaded_file( $_FILES['image']['tmp_name'] ) ) {
-        
-        $filename = image_upload( $_FILES['image'] );
+if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
+    if ( password_verify( get_Post( 'current_password' ), session_get( 'password' ) ) ) {
+        if ( isset( $_FILES['image'] ) && is_uploaded_file( $_FILES['image']['tmp_name'] ) ) {
+            $filename = image_upload( $_FILES['image'] );
+        } else {
+            $filename = session_get( 'image' );
+        }
+        user_insertOrUpdate( 'update', get_Post( 'user_name' ), get_Post( 'nickname' ), get_Post( 'email' ), get_Post( 'password' ), $filename );
     } else {
-        $filename = session_get( 'image' );
-    }
-
-    user_insertOrUpdate( 'update', $_POST['user_name'], $_POST['nickname'], $_POST['email'], $_POST['password'], $filename );
-}
+        message_display( 'danger', 'パスワードが違います' );
+    } 
+} 
 
 define( "FORMTITLE", "ユーザ情報を編集する" );
 define( "BUTTONTEXT", "ユーザ情報を更新する" );

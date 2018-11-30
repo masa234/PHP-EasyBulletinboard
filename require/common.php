@@ -9,47 +9,55 @@ function query( $query, $type = null ) {
     $mysqli = get_db();
 
     $result = $mysqli->query( $query );
+    var_dump( $query );
 
-    if ( ! $result ) {
+    if ( $result === false ) {
+        // クエリ失敗 
+        message_display( 'danger', 'クエリが失敗しました' );
+        return;
+    } else if ( $result === true ) {
 
-        $response = array( 
-            'count'  => 0 , // 影響があった行の数
-            'result' => '',
-            'message' => 'query faied please confirmation your sql syntax and database infomation .',
-        );
-    }
-
-    // select文以外
-    if ( $result === TRUE ) {
-
-        $response = array( 
-            'count'  => '', // 影響があった行の数
+        $response = array(
+            'count'  => $mysqli->affected_rows, 
             'datas' => '',
             'message' => 'query success',
         );
+
+        if ( $response['count'] == 0 ) {
+            message_display( 'danger', '0行変更しました' );
+            exit();
+        }
     } else {
 
         $datas = array();
 
-        while ($row = $result->fetch_assoc()) {
-            $datas[] = $row;
+        if ( $type == 'fetch' ) {
+            while ( $row = $result->fetch_assoc() ) {
+                foreach( $row as $key => $value ) {
+                    $datas[$key] = $row[$key];
+                }
+            }
+        } else {
+            while ($row = $result->fetch_assoc()) {
+                $datas[] = $row;
+            }
         }
 
-        $response = array( 
-            'count'  => mysqli_num_rows( $result ), // 影響があった行の数
+        $response = array(
+            'count'  => mysqli_num_rows( $result ), 
             'datas' => $datas,
-            'message' => '',
+            'message' => 'query success',
         );
-
+        
         $result->close();
     }
 
     if ( $type == 'json' ) {
-        return json_encode( $response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+        return json_encode( $response['datas'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
     } else {
         return $response;
     }
-}   
+}    
 
 function pagination( $datas, $limit = 25 ) {
 
@@ -58,13 +66,15 @@ function pagination( $datas, $limit = 25 ) {
         return array();
     }
 
-    if ( isset( $_REQUEST['page'] ) ) {
-        if ( ! is_numeric( $_REQUEST['page'] ) ) {
+    $request_page = filter_input( INPUT_GET, "page" );
+
+    if ( $request_page ) {
+        if ( ! is_numeric( $request_page ) ) {
             // string型
             message_display( 'danger', 'pageパラメータは数値を指定してください' );
             exit();
         } else {
-            $page = $_REQUEST['page'];
+            $page = $request_page;
         }
     } else {
         $page =1;
@@ -105,6 +115,19 @@ function pagination( $datas, $limit = 25 ) {
     return $response;
 }
 
+function find( $table ,$id ) {
+    $id = escape( $id );
+
+    $query = "
+        SELECT * FROM $table
+        WHERE id = '$id'
+        ";
+
+    $result = query( $query, 'fetch' );
+
+    return $result['datas'];
+}
+
 // テーブル名、カラム、値を指定してテーブルに、指定した値のレコードが存在するか判定
 function isUniq( $table, $column, $value ) {
 
@@ -123,7 +146,7 @@ function isUniq( $table, $column, $value ) {
 function isCurrentUser( $table, $id ) {
 
     $id = escape( $id );
-    $user_id = session_get( 'user_id' );
+    $user_id = get_current_user_id();
 
     $query ="
         SELECT * FROM $table
@@ -134,14 +157,6 @@ function isCurrentUser( $table, $id ) {
     $result = query( $query );
 
     return $result['count'] == 1;
-}
-
-
-function get_current_datetime() {
-    $now = new DateTime();
-    $now = $now->format('Y-m-d H:i:s');
-
-    return $now;
 }
 
 function image_upload( $files ) {
@@ -193,18 +208,35 @@ function image_upload( $files ) {
     }
 }
 
-function error_display( $errors ) {   
-    ?>
-    <div class="container">
-        <div class="alert alert-dismissible alert-warning">
-        <?php foreach ( $errors as $error ): ?>
-        <?php print h( $error ) ?>
-        <br>
-        <?php endforeach; ?> 
-        </div>
-    </div>
-    <?php
+function get_Post( $key ) {
+    return ( string )filter_input( INPUT_POST, $key );
 }
+
+function get_current() {
+    return basename( $_SERVER['SCRIPT_NAME'] ,'.php' );
+}
+
+function get_current_user_id() {
+    return session_get( 'id' );
+}
+
+function get_current_datetime() {
+    $now = new DateTime();
+    $now = $now->format('Y-m-d H:i:s');
+
+    return $now;
+}
+
+function error_display( $errors ) { 
+    ?><div class="container">
+          <div class="alert alert-dismissible alert-warning">
+          <?= h ( count( $errors ) . '件のエラーが発生しました' ) ?><br>
+          <?php foreach ( $errors as $error ): ?>
+          <li><?= h ( $error ) ?></li>
+          <?php endforeach; ?>
+          </div>
+      </div><?php 
+  }
 
 function message_display( $type , $message ) {  
     ?>

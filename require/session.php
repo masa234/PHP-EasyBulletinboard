@@ -2,11 +2,10 @@
 
 session_start();
 session_regenerate_id();
-$fname = basename( $_SERVER['PHP_SELF'] , ".php");
-
+$current = basename( $_SERVER['SCRIPT_NAME'] ,'.php' );
 
 // ユーザ新規登録画面、ログイン画面のどちらかかつログアウトページでない場合
-if ( $fname == 'authenticate' || $fname == 'register' ) {
+if ( $current == 'authenticate' || $current == 'register' ) {
     if ( isAuthenticated() ) {
         header( "Location: posts.php" );
         exit();
@@ -30,7 +29,6 @@ if ( $fname == 'authenticate' || $fname == 'register' ) {
 } 
 
 function authenticate( $nickname, $password ) {
-
     $nickname = escape( $nickname );
     $password = escape( $password );
 
@@ -39,41 +37,22 @@ function authenticate( $nickname, $password ) {
         WHERE nickname='$nickname'
         ";
 
-    $mysqli = get_db();
+    $result = query( $query, 'fetch' );
 
-    $result = $mysqli->query( $query );
-
-    if ( mysqli_num_rows( $result ) == 0 ) {
-        message_display( 'danger' , 'ログインに失敗しました' );
+    if ( $result['count'] == 0 ) {
+        message_display( 'danger', 'ユーザ名が間違っています' );
         return;
     }
+    $datas = $result['datas'];
 
-    while ($row = $result->fetch_assoc()) {
-        $user_id = $row['id'];
-        $user_name = $row['user_name'];
-        $nickname = $row['nickname'];
-        $email = $row['email'];
-        $image = $row['image'];
-        $admin = $row['admin'];
-        $db_password = $row['password'];
-    }
-
-    // データベースの切断
-    $result->close();
-
-    if ( password_verify( $password, $db_password ) ) {
-        session_set( 'user_id', $user_id );
-        session_set( 'user_name', $user_name );
-        session_set( 'nickname', $nickname );
-        session_set( 'email', $email );
-        session_set( 'password', $db_password );
-        session_set( 'admin', $admin );
+    // パスワードが妥当であるかを確認
+    if ( password_verify( $password, $datas['password'] ) ) {
+        session_set_array( $datas );
         session_set( 'session_created_at', strtotime( 'now' ) );
-        session_regenerate_id( true );
         header( "Location: posts.php" );
-        exit;
+        exit();
     } else {
-        message_display( 'danger' , 'ログインに失敗しました' );
+        message_display( 'danger', 'ログインに失敗しました' );
     }
 }
 
@@ -81,16 +60,21 @@ function session_set( $key, $value ) {
     $_SESSION[$key] = $value;    
 }
 
+function session_set_array( $datas ) {
+    foreach ( $datas as $key => $value ) {
+        $_SESSION[$key] = $value;
+    }
+}
+
+function session_get( $key ) {
+    return isset( $_SESSION[$key] ) ? $_SESSION[$key] : null;
+}
+
 function session_clear() {
     $_SESSION = array();
 }
 
 // ログインしていればtrueを返却、していなければfalseを返却
-function isAuthenticated()
-{
-    return isset( $_SESSION['user_id'] );
-}
-
-function session_get( $key ) {
-    return isset( $_SESSION[$key] ) ? $_SESSION[$key] : null;
+function isAuthenticated() {
+    return isset( $_SESSION['id'] );
 }

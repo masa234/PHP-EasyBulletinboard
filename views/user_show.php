@@ -10,30 +10,30 @@ require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 if ( isset( $_REQUEST['id'] ) && is_numeric( $_REQUEST['id'] ) ) {
-    $user = get_user( $_REQUEST['id'] );
+    $user = find( 'users' ,$_REQUEST['id'] );
 } else {
     header( "Location:users.php" );
     exit();
 }    
 
-if ( isset( $_POST['action'] ) ) {
-    user_delete( $_POST['user_id'] );
+if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
+    user_delete( get_Post( 'user_id' ) );
 }
 
-if ( isset( $_POST['follow'] ) ) {
-    follow( $_POST['user_id'] );
+if ( isset( $_POST['follow'] ) && is_string( $_POST['follow'] ) ) {
+    follow( get_Post( 'user_id' ) );
 }
 
-if ( isset( $_POST['unfollow'] ) ) {
-    unfollow( $_POST['user_id'] );
+if ( isset( $_POST['unfollow'] ) && is_string( $_POST['unfollow'] ) ) {
+    unfollow( get_Post( 'user_id' ) );
 }
 
-if ( isset( $_POST['like'] ) ) {
-    like( $_POST['post_id'] );
+if ( isset( $_POST['like'] ) && is_string( $_POST['like'] ) ) {
+    like( get_Post( 'post_id' ) );
 }
 
-if ( isset( $_POST['unlike'] ) ) {
-    unlike( $_POST['post_id'] );
+if ( isset( $_POST['unlike'] ) && is_string( $_POST['unlike'] ) ) {
+    unlike( get_Post( 'post_id' ) );
 }
 
 require ( get_partials_dir() . "/user.php" );

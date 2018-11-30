@@ -4,11 +4,12 @@ require (  "../setting_func.php" );
 require ( get_require_dir() . "/dbconfig.php" );
 require ( get_require_dir() . "/common.php" );
 require ( get_require_dir() . "/session.php" );
+require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
-if ( isset( $_POST['action'] ) ) {
-    authenticate( $_POST['nickname'], $_POST['password'] );
+if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
+    authenticate( get_Post( 'nickname' ), get_Post( 'password' ) );
 }
 
 define( "FORMTITLE", "ログインはこちら" );

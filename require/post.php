@@ -5,7 +5,7 @@ function post_insertOrUpdate( $order, $title, $content, $filename, $post_id = nu
     $content = escape( $content );
 
     $now = get_current_datetime();
-    $user_id = session_get( 'user_id' );
+    $user_id = session_get( 'id' );
     
     $errors = post_validation( $title, $content, $post_id );
 
@@ -81,33 +81,6 @@ function post_validation( $title, $content, $post_id = null ) {
     return $errors;
 }
 
-function get_post( $post_id ) {
-
-    $post_id = escape( $post_id );
-
-    $query = "SELECT * FROM posts 
-        WHERE id = '$post_id'
-        ";
-    
-    $mysqli = get_db();
-
-    $result = $mysqli->query( $query );
-
-    $post = array();
-
-    while ( $row = $result->fetch_assoc() ) {
-        $post['id'] = $row['id'];
-        $post['title'] = $row['title'];
-        $post["content"] = $row["content"];
-        $post["image"] = $row["image"];
-        $post["created_at"] = $row["created_at"];
-        $post["updated_at"] = $row["updated_at"];
-        $post["user_id"] = $row["user_id"];
-    }
-
-    return $post;
-}
-
 function post_delete( $post_id ) {
 
     $post_id = escape( $post_id );
@@ -117,7 +90,7 @@ function post_delete( $post_id ) {
         exit();
     }
 
-    $user_id = session_get( 'user_id' );
+    $user_id = session_get( 'id' );
 
     $query ="
         DELETE FROM posts 
