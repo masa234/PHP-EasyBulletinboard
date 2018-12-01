@@ -9,29 +9,27 @@ require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
-if ( isset( $_POST['action'] ) ) {
+if ( is_Submit() ) {
     if ( isset( $_FILES["image"] ) && is_uploaded_file( $_FILES["image"]["tmp_name"] ) ) {
-        
-        if ( $filename = image_upload( $_FILES["image"] ) ) {
-            post_insertOrUpdate( 'insert' , $_POST['title'], $_POST['content'], $filename );
-        }
-    }  else {
-        message_display( 'danger',  'ファイルの選択をお願い致します。' );
+        $filename = image_upload( $_FILES["image"] );
+    } else {
+        $filename = null;
     }
+    post_insertOrUpdate( 'insert' , get_Post( 'title' ), get_Post( 'content' ), $filename );
 }
 
-if ( isset( $_POST['post_delete'] ) ) {
-    post_delete( $_POST['post_id'] );
+
+if ( is_Submit( 'post_delete' ) ) {
+    post_delete( get_Post( 'post_id' ) );
 }
 
-if ( isset( $_POST['like'] ) ) {
-    like( $_POST['post_id'] );
+if ( is_Submit( 'like' ) ) {
+    like( get_Post( 'post_id' ) );
 }
 
-if ( isset( $_POST['unlike'] ) ) {
-    unlike( $_POST['post_id'] );
+if ( is_Submit( 'unlike' ) ) {
+    unlike( get_Post( 'post_id' ) );
 }
-
 
 define( "TEXT", "新規投稿" );
 

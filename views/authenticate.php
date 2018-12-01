@@ -8,7 +8,7 @@ require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
-if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
+if ( is_Submit() ) {
     authenticate( get_Post( 'nickname' ), get_Post( 'password' ) );
 }
 

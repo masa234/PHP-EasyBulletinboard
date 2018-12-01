@@ -21,11 +21,11 @@ if ( $current == 'authenticate' || $current == 'register' ) {
     $session_last = session_get( 'session_created_at' );
     $elapsed_time = $now - $session_last;
 
-    if( $elapsed_time > 1800 ){
-        session_clear();
-        print 'ログイン後、30分が経過したのでログアウトします お手数ですが、リロードして再度ログインをお願いいたします';
-        exit();
-    }
+    // if( $elapsed_time > 1800 ){
+    //     session_clear();
+    //     print 'ログイン後、30分が経過したのでログアウトします お手数ですが、リロードして再度ログインをお願いいたします';
+    //     exit();
+    // }
 } 
 
 function authenticate( $nickname, $password ) {

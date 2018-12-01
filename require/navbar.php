@@ -6,43 +6,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <script src="js/style.js"></script>
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/style1.css">
     <link rel="stylesheet" href="../css/style2.css">
 
     <title>PHP easy-bulletinBoard</title>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
-    <script type="text/javascript">
-      function check(){
-
-        if( window.confirm( 'Are you sure?' ) ){
-
-          return true;
-
-        } else{
-
-          return false;
-
-        }
-
-      }
-
-      function countLength( text, field, count ) {
-      
-        document.getElementById( field ).innerHTML = text.length;
-
-      } 
-
-    </script>
   </head>
 <body>
   <!-- Sidebar navigation-->
@@ -100,3 +70,30 @@
   </div>
   <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 <body>
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+    <script type="text/javascript">
+      var check = function check(){
+
+        if( window.confirm( 'Are you sure?' ) ){
+
+          return true;
+
+        } else{
+
+          return false;
+
+        }
+
+      }
+
+      function countLength( text, field, count ) {
+      
+        document.getElementById( field ).innerHTML = text.length;
+
+      } 
+
+      </script>

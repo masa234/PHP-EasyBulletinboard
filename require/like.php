@@ -63,7 +63,7 @@ function is_liked( $post_id ) {
 // 第二引数を指定した場合、userのLikeのカウントを返す 
 function get_like_posts( $user_id, $count = false ) {
 
-    $user_id = get_current_user_id();;
+    $user_id = get_current_user_id();
 
     $query = "
         SELECT 
@@ -85,6 +85,37 @@ function get_like_posts( $user_id, $count = false ) {
     $result = query( $query );
 
     if ( $count ) {
+        return $result['count'];
+    }
+
+    return $result['datas'];
+}
+
+function get_post_like_users( $post_id, $count = null ) {
+    $post_id = escape( $post_id );
+
+    $query ="
+            SELECT 
+                users.id as user_id, 
+                posts.id as post_id,
+                users.nickname,
+                users.email,
+                users.admin,
+                users.image
+            FROM 
+                users INNER JOIN posts 
+            INNER JOIN 
+                likes 
+            ON 
+                posts.id = likes.post_id 
+            WHERE 
+                posts.id = '$post_id'
+            ";
+            print $query;
+
+    $result = query( $query );
+
+    if ( $count = 'count' ) {
         return $result['count'];
     }
 

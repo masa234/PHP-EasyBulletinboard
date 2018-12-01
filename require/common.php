@@ -9,12 +9,11 @@ function query( $query, $type = null ) {
     $mysqli = get_db();
 
     $result = $mysqli->query( $query );
-    var_dump( $query );
 
     if ( $result === false ) {
         // クエリ失敗 
-        message_display( 'danger', 'クエリが失敗しました' );
-        return;
+        message_display( 'danger', "クエリが失敗しましたMySQL error" . $mysqli->error  );
+        exit();
     } else if ( $result === true ) {
 
         $response = array(
@@ -22,11 +21,6 @@ function query( $query, $type = null ) {
             'datas' => '',
             'message' => 'query success',
         );
-
-        if ( $response['count'] == 0 ) {
-            message_display( 'danger', '0行変更しました' );
-            exit();
-        }
     } else {
 
         $datas = array();
@@ -208,6 +202,10 @@ function image_upload( $files ) {
     }
 }
 
+function get_Get( $key ) {
+    return ( string )filter_input( INPUT_GET, $key );
+}
+
 function get_Post( $key ) {
     return ( string )filter_input( INPUT_POST, $key );
 }
@@ -226,6 +224,10 @@ function get_current_datetime() {
 
     return $now;
 }
+
+function is_Submit( $key = 'action' ) {
+    return isset( $_POST[$key] ) && ! is_array( $_POST[$key] );
+}   
 
 function error_display( $errors ) { 
     ?><div class="container">

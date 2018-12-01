@@ -8,7 +8,7 @@ require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/navbar.php" );
 
 // submitボタンが押された場合の処理
-if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
+if ( is_Submit() ) {
     if ( password_verify( get_Post( 'current_password' ), session_get( 'password' ) ) ) {
         if ( isset( $_FILES['image'] ) && is_uploaded_file( $_FILES['image']['tmp_name'] ) ) {
             $filename = image_upload( $_FILES['image'] );

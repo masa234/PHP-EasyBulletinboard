@@ -5,7 +5,7 @@ function post_insertOrUpdate( $order, $title, $content, $filename, $post_id = nu
     $content = escape( $content );
 
     $now = get_current_datetime();
-    $user_id = session_get( 'id' );
+    $user_id = get_current_user_id();
     
     $errors = post_validation( $title, $content, $post_id );
 
@@ -44,8 +44,9 @@ function post_insertOrUpdate( $order, $title, $content, $filename, $post_id = nu
         $message = '投稿の編集に成功しました';
     } 
 
-    query( $query );
-    message_display( 'success', $message );
+    if ( query( $query ) ) {
+        message_display( 'success', $message );
+    }
 }   
 
 // updateの際は、引数にpostのidを指定する
@@ -54,7 +55,7 @@ function post_validation( $title, $content, $post_id = null ) {
 
     // updateの際は、編集する投稿の情報を先に取得する
     if ( $post_id ) {
-        $post = get_post( $post_id );
+        $post = find( $posts , $post_id );
     } else {
         $post['title'] = null;
     }
@@ -90,7 +91,7 @@ function post_delete( $post_id ) {
         exit();
     }
 
-    $user_id = session_get( 'id' );
+    $user_id = get_current_user_id();
 
     $query ="
         DELETE FROM posts 
@@ -101,4 +102,14 @@ function post_delete( $post_id ) {
     query( $query );
 
     message_display( 'success', '削除に成功しました' );
+}
+
+function get_post_value( $key, $post, $default = '' ) {
+    if ( get_Post( $key ) ) {
+        return get_Post( $key );
+    } else if ( isset( $post ) && $post[$key] ) {
+        return $post[$key];
+    } else {
+        return $default;
+    }
 }

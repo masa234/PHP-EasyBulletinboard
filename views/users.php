@@ -9,24 +9,18 @@ require ( get_require_dir() . "/following.php" );
 require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/navbar.php" );
 
-if ( isset( $_POST['action'] ) && is_string( $_POST['action'] ) ) {
-    user_delete( $_POST['user_id'] );
+
+var_dump( $_POST );
+if ( is_Submit() ) {
+    user_delete( get_Post( 'delete_id' ) );
 }
 
-if ( isset( $_POST['follow'] ) && is_string( $_POST['follow'] ) ) {
-    follow( $_POST['user_id'] );
+if ( is_Submit( 'follow' ) ) {
+    follow( get_Post( 'follow_id' ) );
 }
 
-if ( isset( $_POST['unfollow'] ) && is_string( $_POST['unfollow'] ) ) {
-    unfollow( $_POST['user_id'] );
-}
-
-if ( isset( $_POST['like'] )  && is_string( $_POST['like'] ) ) {
-    like( $_POST['post_id'] );
-}
-
-if ( isset( $_POST['unlike'] ) && is_string( $_POST['unlike'] ) ) {
-    unlike( $_POST['post_id'] );
+if ( is_Submit( 'unfollow' ) ) {
+    unfollow( get_Post( 'unfollow_id' ) );
 }
 
 $query = "SELECT * FROM users ORDER BY id DESC";

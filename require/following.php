@@ -41,7 +41,7 @@ function follow( $user_id ) {
 function unfollow( $user_id ) {
 
     $user_id = escape( $user_id );
-    $current_user_id = session_get( 'id' );
+    $current_user_id = get_current_user_id();;
 
     if ( ! is_following( $user_id ) || is_Current_user( $user_id ) ) {
         message_display( 'danger' , '失敗しました' );

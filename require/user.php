@@ -73,6 +73,8 @@ function user_delete( $user_id ) {
         id = '$user_id'
         ";
 
+    query( $query );    
+    
     if ( query( $query ) ) {
         message_display( 'success' , 'ユーザの削除に成功しました' );
     }
