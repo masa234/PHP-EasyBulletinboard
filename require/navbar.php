@@ -95,5 +95,5 @@
         document.getElementById( field ).innerHTML = text.length;
 
       } 
-
       </script>
+

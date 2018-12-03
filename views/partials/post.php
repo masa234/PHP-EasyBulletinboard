@@ -1,4 +1,7 @@
 
+<?php 
+! isset( $post ) && isset( $data ) ? $post = $data : '' ; ?>
+
 <div class="container">
     <div class="card card--extend">
     <div class="card-body">
@@ -25,7 +28,6 @@
         <input type="submit" value="いいねを外す<?=h ( get_post_like_users( $post['id'], 'count' ) ) ?>" name="unlike" class="btn btn-danger">
         </form>
         <?php endif; ?>
-        <?=h ( get_post_like_users( $post['id'], 'count' ) ) ?>
         
         <form action="" method="post">
         <input type="hidden" name="post_id" value="<?= h( $post['id'] ); ?>">
@@ -42,3 +44,5 @@
     </div>
     </div>
 </div>
+
+<?php $post = null ?>

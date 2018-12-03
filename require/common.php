@@ -6,9 +6,10 @@ function h( $str ) {
 
 // query メソッド、デフォルトで連想配列を返却する
 function query( $query, $type = null ) {
-    $mysqli = get_db();
+    global $mysqli;
 
     $result = $mysqli->query( $query );
+    dump( $query );
 
     if ( $result === false ) {
         // クエリ失敗 
@@ -52,62 +53,6 @@ function query( $query, $type = null ) {
         return $response;
     }
 }    
-
-function pagination( $datas, $limit = 25 ) {
-
-    // ガード処理
-    if ( count( $datas ) == 0 ) {
-        return array();
-    }
-
-    $request_page = filter_input( INPUT_GET, "page" );
-
-    if ( $request_page ) {
-        if ( ! is_numeric( $request_page ) ) {
-            // string型
-            message_display( 'danger', 'pageパラメータは数値を指定してください' );
-            exit();
-        } else {
-            $page = $request_page;
-        }
-    } else {
-        $page =1;
-    }
-
-    $page_count = ceil( count( $datas ) / $limit );
-
-    if ( $page > 0  && $page <= $page_count  ) {
-        $start = ( $page * $limit ) - $limit; 
-    } else {
-        message_display( 'warning', $page . 'ページ目は存在しなかったので1ページ目を表示しています' );
-        $start = 0;
-    }
-    ?>
-
-    <?php if ( $page > 1 ): ?>
-    <ul class="pagination pagination-lg">
-        <?php for ( $i=1; $i <= $page_count; $i++ ): ?>
-            <?php if ( $i != $page ): ?>
-            <li class="page-item">
-            <?php else: ?>
-            <li class="page-item disabled">
-            <?php endif; ?>
-                <a class="page-link" href="?page=<?php print $i ?>"><?php print $i; ?></a>
-            </li>
-        <?php endfor; ?> 
-    </ul>
-    <?php endif; ?>
-    <?php 
-
-    $response =  array();
-
-    // 例： 総件数 84件 datas配列の83件目までループの対象になる
-    for ( $i = 0; $i <= $limit && $start +$i <= count( $datas ) -1; $i++ ) {
-        $response[] = $datas[$start+$i];
-    }
-    
-    return $response;
-}
 
 function find( $table ,$id ) {
     $id = escape( $id );
@@ -229,6 +174,20 @@ function is_Submit( $key = 'action' ) {
     return isset( $_POST[$key] ) && ! is_array( $_POST[$key] );
 }   
 
+// ここから出力系のfunction
+
+function require_foreach( $datas, $path ) {
+    if ( count( $datas ) > 0 ) {
+        foreach ( $datas as $data ) {
+            dump( $data ); 
+            require ( $path );
+        }
+    } else {
+        print 'データなし';
+        exit();
+    }
+}
+
 function error_display( $errors ) { 
     ?><div class="container">
           <div class="alert alert-dismissible alert-warning">
@@ -248,4 +207,71 @@ function message_display( $type , $message ) {
         </div>
     </div>
     <?php
+}
+
+// 開発環境時のみ、引数をvar_dumpで出力します。
+function dump( $data ) {
+    if ( getenv('ENV_MODE') !== false ) {
+        // 本番環境
+        // 何も表示しません。
+    } else {
+        // 開発環境
+        // var_dump( $data );
+    }
+}
+
+function pagination( $datas, $limit = 25 ) {
+
+    // ガード処理
+    if ( count( $datas ) == 0 ) {
+        return array();
+    }
+
+    $request_page = filter_input( INPUT_GET, "page" );
+
+    if ( $request_page ) {
+        if ( ! is_numeric( $request_page ) ) {
+            // string型
+            message_display( 'danger', 'pageパラメータは数値を指定してください' );
+            exit();
+        } else {
+            $page = $request_page;
+        }
+    } else {
+        $page =1;
+    }
+
+    $page_count = ceil( count( $datas ) / $limit );
+
+    if ( $page > 0  && $page <= $page_count  ) {
+        $start = ( $page * $limit ) - $limit; 
+    } else {
+        message_display( 'warning', $page . 'ページ目は存在しなかったので1ページ目を表示しています' );
+        $start = 0;
+    }
+    ?>
+
+    <?php if ( $page > 1 ): ?>
+    <ul class="pagination pagination-lg">
+        <?php for ( $i=1; $i <= $page_count; $i++ ): ?>
+            <?php if ( $i != $page ): ?>
+            <li class="page-item">
+            <?php else: ?>
+            <li class="page-item disabled">
+            <?php endif; ?>
+                <a class="page-link" href="?page=<?php print $i ?>"><?php print $i; ?></a>
+            </li>
+        <?php endfor; ?> 
+    </ul>
+    <?php endif; ?>
+    <?php 
+
+    $response =  array();
+
+    // 例： 総件数 84件 datas配列の83件目までループの対象になる
+    for ( $i = 0; $i <= $limit && $start +$i <= count( $datas ) -1; $i++ ) {
+        $response[] = $datas[$start+$i];
+    }
+    
+    return $response;
 }

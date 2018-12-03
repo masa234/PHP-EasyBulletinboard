@@ -1,4 +1,4 @@
-<?php $post = isset( $post ) ? $post : null ?> 
+<?php ! isset( $post ) ? $post = null  : '' ?> 
 
 <div class="container">
     <div class="card">

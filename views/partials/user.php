@@ -1,5 +1,7 @@
 
-<?php var_dump( $user ) ?>
+<?php ! isset( $user ) && isset( $data ) ? $user = $data : '' ;
+dump( $user ) ?> 
+
 <div class="container">
     <div class="card card--extend">
         <div class="card-body">
@@ -10,8 +12,8 @@
             <?php endif; ?>
             <h1 class="card-title">@<?=h( $user['nickname'] ); ?></h1>
             <p class="card-body">
-            follower:<?=h ( get_relationship_count( 'follower' ,$user['id'] ) ); ?><br>
-            following:<?=h ( get_relationship_count( 'following' ,$user['id'] ) ); ?><br>
+            follower:<?=h ( get_user_relationship_count( 'follower' ,$user['id'] ) ); ?><br>
+            following:<?=h ( get_user_relationship_count( 'following' ,$user['id'] ) ); ?><br>
             like:<?=h ( get_like_posts( $user['id'], 'count' ) ); ?>
             </a>
             <?php if( !  is_Current_user( $user['id'] ) ): ?>
@@ -41,3 +43,5 @@
         </div>
     </div>
 </div>
+
+<?php $user = null ?>

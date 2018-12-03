@@ -61,7 +61,7 @@ function unfollow( $user_id ) {
 
 // フォロワーの情報、フォローしているユーザの情報を配列で返します。
 // カウントを取得したい場合は第三引数を指定する
-function get_relationship_count( $type, $user_id ) {
+function get_user_relationship_count( $type, $user_id ) {
 
     $user_id = escape( $user_id );
 
@@ -82,8 +82,7 @@ function get_relationship_count( $type, $user_id ) {
     return $result['count'];
 }
 
-function get_relationships( $type ,$user_id ) {
-
+function get_relationships_user( $type ,$user_id ) {
     $user_id = escape( $user_id );
 
     if ( $type == 'follower' ) {

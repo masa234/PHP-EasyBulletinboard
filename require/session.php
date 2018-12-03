@@ -2,7 +2,7 @@
 
 session_start();
 session_regenerate_id();
-$current = basename( $_SERVER['SCRIPT_NAME'] ,'.php' );
+$current = get_current();
 
 // ユーザ新規登録画面、ログイン画面のどちらかかつログアウトページでない場合
 if ( $current == 'authenticate' || $current == 'register' ) {
@@ -66,8 +66,8 @@ function session_set_array( $datas ) {
     }
 }
 
-function session_get( $key ) {
-    return isset( $_SESSION[$key] ) ? $_SESSION[$key] : null;
+function session_get( $key, $default = null ) {
+    return isset( $_SESSION[$key] ) ? $_SESSION[$key] : $default;
 }
 
 function session_clear() {

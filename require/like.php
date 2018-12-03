@@ -91,6 +91,7 @@ function get_like_posts( $user_id, $count = false ) {
     return $result['datas'];
 }
 
+// 前提条件として、userが削除されたときに、それに紐づくlikesテーブル、postsテーブルのレコードが削除されることが担保されていることが必須
 function get_post_like_users( $post_id, $count = null ) {
     $post_id = escape( $post_id );
 
@@ -103,15 +104,16 @@ function get_post_like_users( $post_id, $count = null ) {
                 users.admin,
                 users.image
             FROM 
-                users INNER JOIN posts 
+                posts INNER JOIN users
+            ON 
+                posts.user_id = users.id 
             INNER JOIN 
                 likes 
             ON 
                 posts.id = likes.post_id 
             WHERE 
-                posts.id = '$post_id'
+                post_id = '$post_id'
             ";
-            print $query;
 
     $result = query( $query );
 

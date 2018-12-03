@@ -151,7 +151,6 @@ function user_password_validation( $password, $errors = null ) {
 function set_current_user() {
     $current_user_id = get_current_user_id();
     $current_user_info = find( 'users' ,$current_user_id );
-    var_dump( $current_user_info );
 
     session_set_array( $current_user_info );
 }
