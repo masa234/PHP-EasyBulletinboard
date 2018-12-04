@@ -11,7 +11,7 @@ if ( is_Submit() ) {
         } else {
             $image_path = session_get( 'image' );
         }
-        user_insertOrUpdate( 'update', get_Post( 'user_name' ), get_Post( 'nickname' ), get_Post( 'email' ), get_Post( 'password' ), $image_path );
+        user_updateOrCreate( 'update', get_Post( 'user_name' ), get_Post( 'nickname' ), get_Post( 'email' ), get_Post( 'password' ), $image_path );
     } else {
         message_display( 'danger', 'パスワードが違います' );
     } 

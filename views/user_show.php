@@ -17,11 +17,11 @@ if ( is_Submit() ) {
 }
 
 if ( is_Submit( 'follow' ) ) {
-    follow( get_Post( 'user_id' ) );
+    follow( get_Post( 'follow_id' ) );
 }
 
-if ( is_Submit( 'unfollow' ) ){
-    unfollow( get_Post( 'user_id' ) );
+if ( is_Submit( 'unfollow' ) ) {
+    unfollow( get_Post( 'unfollow_id' ) );
 }
 
 if ( is_Submit( 'like' )  ) {
@@ -70,7 +70,6 @@ require ( get_partials_dir() . "/user.php" );
         ?>
         <h1>Post:<?php print( count( $posts ) ); ?></h1>
         <?php require_foreach( $posts, get_partials_dir() . "/post.php" ) ?>
-        <?php exit(); ?>
         </div>
 
         <div class="tab-pane" id="tab2">

@@ -102,3 +102,16 @@ body {
 form {
     display: inline !important;
 }
+
+.nickname {
+    color: blue;
+}
+
+.user-image-short {
+    width: 40px;
+
+}
+
+.post-user-link {
+    color: blue;
+}

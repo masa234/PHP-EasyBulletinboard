@@ -10,7 +10,10 @@ dump( $user ) ?>
             <?php if ( file_exists( $user_image ) &&  ! is_dir( $user_image ) ): ?>
             <img src=<?=h( $user_image ) ?> class="img-circle user-image" alt="...">
             <?php endif; ?>
-            <h1 class="card-title">@<?=h( $user['nickname'] ); ?></h1>
+            <h1 class="card-title"><?=h( $user['user_name'] ); ?></h1>
+            <div class="nickname">
+                @<?=h( $user['nickname'] ) ?>
+            </div>
             <p class="card-body">
             follower:<?=h ( get_user_relationship_count( 'follower' ,$user['id'] ) ); ?><br>
             following:<?=h ( get_user_relationship_count( 'following' ,$user['id'] ) ); ?><br>

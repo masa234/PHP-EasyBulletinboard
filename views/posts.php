@@ -1,11 +1,13 @@
 <?php
 
 require (  "../setting_func.php" );
+require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/post.php" );
 require ( get_require_dir() . "/like.php" );
 
 
 dump( $_POST );
+
 // submitボタンが押された場合の処理
 if ( is_Submit() ) {
     if ( isset( $_FILES["image"] ) && is_uploaded_file( $_FILES["image"]["tmp_name"] ) ) {
@@ -13,7 +15,7 @@ if ( is_Submit() ) {
     } else {
         $image_path = null;
     }
-    post_insertOrUpdate( 'insert' , get_Post( 'title' ), get_Post( 'content' ), $image_path );
+    post_updateOrCreate( 'create' , get_Post( 'title' ), get_Post( 'content' ), $image_path );
 }
 
 
@@ -33,8 +35,7 @@ define( "TEXT", "新規投稿" );
 
 require ( get_partials_dir() . "/post_form.php" );
 
-$query = "SELECT * FROM posts ORDER BY updated_at DESC";
-$result = query( $query );
-$posts = pagination( $result['datas'], 10 );
+$feed_posts = get_feed();
+$feed_posts = pagination( $feed_posts['datas'], 10 );
 
-each_loop( $posts ,get_partials_dir() . "/post.php" );
+require_foreach( $feed_posts ,get_partials_dir() . "/post.php" );

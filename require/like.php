@@ -1,7 +1,6 @@
 <?php 
 
 function like( $post_id ) {
-
     if ( is_liked( $post_id ) ) {
         message_display( 'danger' , '失敗しました' );
         return;
@@ -23,7 +22,6 @@ function like( $post_id ) {
 }
 
 function unlike( $post_id ) {
-
     if ( ! is_liked( $post_id ) ) {
         message_display( 'danger' , '失敗しました' );
         return;
@@ -44,7 +42,6 @@ function unlike( $post_id ) {
 }
 
 function is_liked( $post_id ) {
-
     $user_id = get_current_user_id();;
     $post_id = escape( $post_id );
 
@@ -62,7 +59,6 @@ function is_liked( $post_id ) {
 // 第一引数にユーザのIDを指定してユーザのいいねの情報を配列で返却。
 // 第二引数を指定した場合、userのLikeのカウントを返す 
 function get_like_posts( $user_id, $count = false ) {
-
     $user_id = get_current_user_id();
 
     $query = "

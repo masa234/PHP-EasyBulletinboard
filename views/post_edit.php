@@ -23,7 +23,7 @@ if ( is_Submit() ) {
     }
 
     // 更新処理
-    post_insertOrUpdate( 'update' , get_Post( 'title' ), get_Post( 'content' ), $image_path, $post['id'] );
+    post_updateOrCreate( 'update' , get_Post( 'title' ), get_Post( 'content' ), $image_path, $post['id'] );
 }
 
 define( "TEXT", "投稿編集画面" );

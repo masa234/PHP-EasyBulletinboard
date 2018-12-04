@@ -1,6 +1,6 @@
 <?php 
 
-function post_insertOrUpdate( $order, $title, $content, $filename, $post_id = null  ) {
+function post_updateOrCreate( $order, $title, $content, $filename, $post_id = null  ) {
     $title = escape( $title );
     $content = escape( $content );
 
@@ -15,7 +15,7 @@ function post_insertOrUpdate( $order, $title, $content, $filename, $post_id = nu
     }
 
     // create
-    if ( $order == 'insert' ) {
+    if ( $order == 'create' ) {
         $query = "
             INSERT INTO posts
                 ( title, content, image, created_at, updated_at, user_id
@@ -55,7 +55,7 @@ function post_validation( $title, $content, $post_id = null ) {
 
     // updateの際は、編集する投稿の情報を先に取得する
     if ( $post_id ) {
-        $post = find( $posts , $post_id );
+        $post = find( 'posts' , $post_id );
     } else {
         $post['title'] = null;
     }
@@ -80,6 +80,27 @@ function post_validation( $title, $content, $post_id = null ) {
     }
 
     return $errors;
+}
+
+function get_feed() {
+    $user_id = get_current_user_id();
+
+    $query = "
+        SELECT  
+            *                
+        FROM 
+            posts LEFT JOIN followings
+        ON  
+            posts.user_id = followings.user_id
+        WHERE 
+            followings.followed_id= '$user_id'
+        OR 
+            posts.user_id = '$user_id'
+        ";
+
+    $result = query( $query );
+
+    return $result;
 }
 
 function post_delete( $post_id ) {

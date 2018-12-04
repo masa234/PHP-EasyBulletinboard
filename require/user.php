@@ -1,6 +1,6 @@
 <?php
 
-function user_insertOrUpdate( $order ,$user_name, $nickname, $email, $password, $filename ) {
+function user_updateOrCreate( $order ,$user_name, $nickname, $email, $password, $filename ) {
 
     // データをエスケープ
     $user_name = escape( $user_name );
@@ -20,7 +20,7 @@ function user_insertOrUpdate( $order ,$user_name, $nickname, $email, $password, 
 
     $password = password_hash( $password, PASSWORD_DEFAULT ); // password hash化
 
-    if ( $order == 'insert' ) {
+    if ( $order == 'create' ) {
         $query = "INSERT INTO users 
                     ( user_name, nickname, email, image, password 
                 ) VALUES (
@@ -166,4 +166,15 @@ function is_Admin() {
 
 function get_user_value( $key ) {
     return get_Post( $key ) ? get_Post( $key ) : session_get( $key );
+}
+
+function get_user_info( $user_id, $type ) {
+    if ( is_null( $user_id ) ) {
+       $user_id = get_current_user_id();
+    } 
+
+    $user_id = escape( $user_id );
+    $result = find( 'users' , $user_id );
+
+    return $result[$type];
 }

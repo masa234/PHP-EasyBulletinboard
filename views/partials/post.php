@@ -1,6 +1,8 @@
 
 <?php 
-! isset( $post ) && isset( $data ) ? $post = $data : '' ; ?>
+! isset( $post ) && isset( $data ) ? $post = $data : '' ; 
+var_dump( $post )?>
+
 
 <div class="container">
     <div class="card card--extend">
@@ -10,6 +12,15 @@
         <img src=<?= h( $post_image ) ?> class="img-circle post-image" alt="...">
         <?php endif; ?> 
         <h1 class="card-title"><?= h( $post['title'] ); ?></h1>
+
+        <a class="post-user-link" href = "user_show.php?id=<?= h( $post['user_id'] ) ?>">
+            <?php $post_image = '../images/' . get_user_info( $post['user_id'], 'image' ); ?>
+            <?php if ( file_exists( $post_image ) && ! is_dir( $post_image ) ): ?>
+            <img src=<?= h( $post_image ) ?> class="img-circle user-image-short" alt="...">
+            <?php endif; ?> 
+            <?= h( get_user_info( $post['user_id'], 'user_name' ) ) ?>( @<?= h( get_user_info( $post['user_id'], 'nickname' ) ) ?> )
+        </a>
+
         <p class="card-body">
         <div class ="post-content">
         <?= h( $post['content'] ); ?>
