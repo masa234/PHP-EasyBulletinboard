@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2018 年 11 朁E30 日 20:16
+-- Generation Time: 2018 年 12 朁E04 日 04:51
 -- サーバのバージョン： 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -38,9 +38,7 @@ CREATE TABLE `followings` (
 --
 
 INSERT INTO `followings` (`user_id`, `followed_id`) VALUES
-(16, 20),
-(20, 30),
-(21, 20);
+(23, 24);
 
 -- --------------------------------------------------------
 
@@ -59,7 +57,9 @@ CREATE TABLE `likes` (
 --
 
 INSERT INTO `likes` (`id`, `user_id`, `post_id`) VALUES
-(40, 20, 3);
+(65, 24, 15),
+(66, 24, 14),
+(67, 23, 15);
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,9 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `title`, `content`, `image`, `created_at`, `updated_at`, `user_id`) VALUES
-(3, 'f', 'd', '20181127031044356a192b7913b04c54574d18c28d46e6395428ab.jpeg', '2018-11-27 03:10:44', '2018-11-27 03:10:44', 16);
+(13, 'チコリータ', 'チコリータ', '', '2018-12-04 01:28:00', '2018-12-04 01:28:00', 24),
+(14, 'iii', 'iiii', '', '2018-12-04 01:50:10', '2018-12-04 01:50:10', 24),
+(15, 'チコリータ３', 'チコリータ', '', '2018-12-04 01:58:31', '2018-12-04 01:58:31', 23);
 
 -- --------------------------------------------------------
 
@@ -92,9 +94,17 @@ INSERT INTO `posts` (`id`, `title`, `content`, `image`, `created_at`, `updated_a
 
 CREATE TABLE `retweets` (
   `id` int(255) NOT NULL,
-  `user_id` int(255) NOT NULL,
-  `post_id` int(255) NOT NULL
+  `post_id` int(255) NOT NULL,
+  `user_id` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- テーブルのデータのダンプ `retweets`
+--
+
+INSERT INTO `retweets` (`id`, `post_id`, `user_id`) VALUES
+(0, 13, 24),
+(0, 15, 23);
 
 -- --------------------------------------------------------
 
@@ -115,6 +125,11 @@ CREATE TABLE `users` (
 --
 -- テーブルのデータのダンプ `users`
 --
+
+INSERT INTO `users` (`id`, `user_name`, `nickname`, `email`, `admin`, `image`, `password`) VALUES
+(23, 'チコリータ', 'shizuku234', 'shizuku234@shizuku234', 0, '20181204012116356a192b7913b04c54574d18c28d46e6395428ab.jpeg', '$2y$10$GyIcXODPDy7kcRRc.7GkPuUgdpkl.fIW.RtX.y2bVpetj4aREXuSO'),
+(24, 'ナエトル', 'naetoru2', 'bfmt1250081@gn.jp', 0, '20181204012533356a192b7913b04c54574d18c28d46e6395428ab.jpeg', '$2y$10$tg0KksGNp4ThU7jFTL1R.OWzLbjg7XSDWnqwRkiHVJefG95h7Yhaa');
+
 --
 -- Indexes for dumped tables
 --
@@ -145,6 +160,7 @@ ALTER TABLE `posts`
 -- Indexes for table `retweets`
 --
 ALTER TABLE `retweets`
+  ADD UNIQUE KEY `post_id_2` (`post_id`,`user_id`),
   ADD KEY `post_id` (`post_id`),
   ADD KEY `user_id` (`user_id`);
 
@@ -162,19 +178,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- ダンプしたテーブルの制約
@@ -184,27 +200,13 @@ ALTER TABLE `users`
 -- テーブルの制約 `followings`
 --
 ALTER TABLE `followings`
-  ADD CONSTRAINT `followings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE;
+  ADD CONSTRAINT `followings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- テーブルの制約 `likes`
 --
 ALTER TABLE `likes`
-  ADD CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE;
-  ADD CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON UPDATE CASCADE ON DELETE CASCADE;
-
---
--- テーブルの制約 `posts`
---
-ALTER TABLE `posts`
-  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE;
-
---
--- テーブルの制約 `retweets`
---
-ALTER TABLE `retweets`
-  ADD CONSTRAINT `retweets_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON UPDATE CASCADE ON DELETE CASCADE;
-  ADD CONSTRAINT `retweets_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE ON DELETE CASCADE;
+  ADD CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

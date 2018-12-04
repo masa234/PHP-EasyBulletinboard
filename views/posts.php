@@ -4,6 +4,7 @@ require (  "../setting_func.php" );
 require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/post.php" );
 require ( get_require_dir() . "/like.php" );
+require ( get_require_dir() . "/retweet.php" );
 
 
 dump( $_POST );
@@ -31,6 +32,14 @@ if ( is_Submit( 'unlike' ) ) {
     unlike( get_Post( 'post_id' ) );
 }
 
+if ( is_Submit( 'retweet' ) ) {
+    retweet( get_Post( 'post_id' ) );
+}
+
+if ( is_Submit( 'unretweet' ) ) {
+    unRetweet( get_Post( 'post_id' ) );
+}
+
 define( "TEXT", "新規投稿" );
 
 require ( get_partials_dir() . "/post_form.php" );
@@ -38,4 +47,4 @@ require ( get_partials_dir() . "/post_form.php" );
 $feed_posts = get_feed();
 $feed_posts = pagination( $feed_posts['datas'], 10 );
 
-require_foreach( $feed_posts ,get_partials_dir() . "/post.php" );
+require_foreach( $feed_posts , 'post',  get_partials_dir() . "/post.php" );

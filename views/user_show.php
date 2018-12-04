@@ -4,8 +4,10 @@ require (  "../setting_func.php" );
 require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/following.php" );
 require ( get_require_dir() . "/like.php" );
+require ( get_require_dir() . "/retweet.php" );
 
 $user = find( 'users' , get_Get( 'id' )  );
+var_dump( $user['id'] );
 
 if ( ! get_Get( 'id' )  || ! is_numeric( get_Get( 'id' )  ) || ! $user ) {
     header( "Location:users.php" );
@@ -58,7 +60,8 @@ require ( get_partials_dir() . "/user.php" );
 </div>
 
 <div id="tab">    
-    <?php $user_id = escape( $user['id'] ); ?>
+    <?php $user = find( 'users' , get_Get( 'id' )  ) ?>
+    <?php $user_id = $user['id'];  var_dump( $user_id )?>
 
     <!-- タブのコンテンツ部分 -->
     <div class="tab-content">
@@ -69,25 +72,25 @@ require ( get_partials_dir() . "/user.php" );
         $posts = pagination( $result['datas'] );
         ?>
         <h1>Post:<?php print( count( $posts ) ); ?></h1>
-        <?php require_foreach( $posts, get_partials_dir() . "/post.php" ) ?>
+        <?php require_foreach( $posts, 'post', get_partials_dir() . "/post.php" ) ?>
         </div>
 
         <div class="tab-pane" id="tab2">
         <?php
-        $followings = get_relationships( 'following' , $user_id );
+        $followings = get_relationships_user( 'following' , $user_id );
         $followings = pagination( $followings );
         ?>
         <h1>Following:<?php print( count( $followings ) ); ?></h1>
-        <?php require_foreach( $followings, get_partials_dir() . "/post.php" ) ?>
+        <?php require_foreach( $followings, 'user' , get_partials_dir() . "/user.php" ) ?>
         </div>
 
         <div class="tab-pane" id="tab3">
         <?php
-        $followers = get_relationships( 'follower' , $user_id );
+        $followers = get_relationships_user( 'follower' , $user_id );
         $followers = pagination( $followers );
         ?>
         <h1>Follower:<?php print( count( $followers ) ); ?></h1>
-        <?php require_foreach( $followers, get_partials_dir() . "/user.php" ) ?>
+        <?php require_foreach( $followers, 'user' , get_partials_dir() . "/user.php" ) ?>
         </div>
 
         <div class="tab-pane" id="tab4">
@@ -96,7 +99,7 @@ require ( get_partials_dir() . "/user.php" );
         $likes = pagination( $likes );
         ?>
         <h1>Liked posts:<?php print( count( $likes ) ); ?></h1>
-        <?php require_foreach( $likes, get_partials_dir() . "/user.php" ) ?>
+        <?php require_foreach( $likes, 'post' , get_partials_dir() . "/post.php" ) ?>
         </div>
     </div>
 </div>

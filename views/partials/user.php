@@ -1,7 +1,4 @@
 
-<?php ! isset( $user ) && isset( $data ) ? $user = $data : '' ;
-dump( $user ) ?> 
-
 <div class="container">
     <div class="card card--extend">
         <div class="card-body">
@@ -46,5 +43,3 @@ dump( $user ) ?>
         </div>
     </div>
 </div>
-
-<?php $user = null ?>

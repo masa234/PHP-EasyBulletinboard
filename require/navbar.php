@@ -49,6 +49,12 @@
                 ユーザ情報編集
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="user_show.php?id=<?= h( get_current_user_id() ) ?>">
+                <span data-feather="bar-chart-2"></span>
+                マイページ
+              </a>
+            </li>
             <?php else: ?>
             <li class="nav-item">
               <a class="nav-link" href="register.php">

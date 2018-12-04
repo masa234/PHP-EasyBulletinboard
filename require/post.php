@@ -96,6 +96,8 @@ function get_feed() {
             followings.followed_id= '$user_id'
         OR 
             posts.user_id = '$user_id'
+        ORDER BY 
+            posts.updated_at DESC
         ";
 
     $result = query( $query );

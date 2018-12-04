@@ -176,10 +176,9 @@ function is_Submit( $key = 'action' ) {
 
 // ここから出力系のfunction
 
-function require_foreach( $datas, $path ) {
+function require_foreach( $datas, $each_var ,$path ) {
     if ( count( $datas ) > 0 ) {
-        foreach ( $datas as $data ) {
-            dump( $data ); 
+        foreach ( $datas as ${$each_var} ) {
             require ( $path );
         }
     } else {

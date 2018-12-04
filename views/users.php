@@ -23,4 +23,4 @@ $result = query( $query );
 $users = pagination( $result['datas'], 10 );
 var_dump( $users );
 
-require_foreach( $users ,get_partials_dir() . "/user.php" );
+require_foreach( $users , 'user', get_partials_dir() . "/user.php" );

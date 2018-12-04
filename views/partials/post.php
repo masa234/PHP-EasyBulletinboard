@@ -1,9 +1,4 @@
 
-<?php 
-! isset( $post ) && isset( $data ) ? $post = $data : '' ; 
-var_dump( $post )?>
-
-
 <div class="container">
     <div class="card card--extend">
     <div class="card-body">
@@ -40,10 +35,19 @@ var_dump( $post )?>
         </form>
         <?php endif; ?>
         
+        <?php if ( ! is_retweet( $post['id'] ) ): ?>
         <form action="" method="post">
         <input type="hidden" name="post_id" value="<?= h( $post['id'] ); ?>">
-        <input type="submit" value="retweet" name="unlike" class="btn btn-info">
+        <input type="submit" value="retweet" name="retweet" class="btn btn-info">
         </form>
+
+        <?php else: ?>
+        <form action="" method="post">
+        <input type="hidden" name="post_id" value="<?= h( $post['id'] ); ?>">
+        <input type="submit" value="retweetを外す" name="unretweet" class="btn btn-primary">
+        </form>
+        <?php endif; ?>
+
         <!-- // ログインユーザの投稿の場合のみ、編集ボタン、削除ボタンを設置します。 -->
         <?php if ( isCurrentUser( 'posts', $post['id'] ) ): ?>
         <a class="btn btn-info" href="post_edit.php?id=<?= h( $post['id'] ); ?>" role="button">編集する</a>
@@ -55,5 +59,3 @@ var_dump( $post )?>
     </div>
     </div>
 </div>
-
-<?php $post = null ?>
