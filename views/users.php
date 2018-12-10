@@ -2,7 +2,7 @@
 
 require (  "../setting_func.php" );
 require ( get_require_dir() . "/user.php" );
-require ( get_require_dir() . "/following.php" );
+require ( get_require_dir() . "/relationship.php" );
 require ( get_require_dir() . "/like.php" );
 
 if ( is_Submit() ) {
@@ -21,6 +21,5 @@ $query = "SELECT * FROM users ORDER BY id DESC";
 $result = query( $query );
 
 $users = pagination( $result['datas'], 10 );
-var_dump( $users );
 
 require_foreach( $users , 'user', get_partials_dir() . "/user.php" );

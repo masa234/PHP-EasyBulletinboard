@@ -3,9 +3,8 @@
     <div class="card card--extend">
         <div class="card-body">
             <a href ="user_show.php?id=<?=h ( $user['id'] ); ?>" class= user-link>
-            <?php $user_image = '../images/' . $user['image']; ?>
-            <?php if ( file_exists( $user_image ) &&  ! is_dir( $user_image ) ): ?>
-            <img src=<?=h( $user_image ) ?> class="img-circle user-image" alt="...">
+            <?php if ( img_exists( $user['image'] ) ): ?>
+            <img src=<?=h( get_image_path( $user['image'] ) ) ?> class="img-circle user-image" alt="...">
             <?php endif; ?>
             <h1 class="card-title"><?=h( $user['user_name'] ); ?></h1>
             <div class="nickname">

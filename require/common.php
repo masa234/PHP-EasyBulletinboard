@@ -7,13 +7,11 @@ function h( $str ) {
 // query メソッド、デフォルトで連想配列を返却する
 function query( $query, $type = null ) {
     global $mysqli;
-
     $result = $mysqli->query( $query );
-    dump( $query );
 
     if ( $result === false ) {
         // クエリ失敗 
-        message_display( 'danger', "クエリが失敗しましたMySQL error" . $mysqli->error  );
+        alert( 'danger', "クエリが失敗しましたMySQL error" . $mysqli->error  );
         exit();
     } else if ( $result === true ) {
 
@@ -54,16 +52,24 @@ function query( $query, $type = null ) {
     }
 }    
 
-function find( $table ,$id ) {
-    $id = escape( $id );
+function all( $table ) {
+    $query = "
+        SELECT * FROM $table
+        ";
+    
+    $result = query( $query );
+    return $result['datas'];
+}
+
+function find_by( $table , $value, $column = 'id' ) {
+    $value = escape( $value );
 
     $query = "
         SELECT * FROM $table
-        WHERE id = '$id'
+        WHERE $column = '$value'
         ";
-
+        
     $result = query( $query, 'fetch' );
-
     return $result['datas'];
 }
 
@@ -83,7 +89,6 @@ function isUniq( $table, $column, $value ) {
 }
 
 function isCurrentUser( $table, $id ) {
-
     $id = escape( $id );
     $user_id = get_current_user_id();
 
@@ -96,6 +101,26 @@ function isCurrentUser( $table, $id ) {
     $result = query( $query );
 
     return $result['count'] == 1;
+}
+
+function isCurrent( $table, $value, $column = 'id' ) {
+    $value = escape( $value );
+    $user_id = get_current_user_id();
+
+    $query = "
+        SELECT * FROM users
+        WHERE id = '$user_id'
+        AND $column = '$value'
+        ";
+        var_dump( $query );
+
+    $result = query( $query );
+
+    return $result['count'] == '1';
+}
+
+function is_CurrentUser_id( $user_id ) {
+    return session_get( 'id' ) ==  $user_id; 
 }
 
 function image_upload( $files ) {
@@ -131,8 +156,8 @@ function image_upload( $files ) {
         }
 
     } catch (RuntimeException $e) {
-        message_display( 'danger',  $e->getMessage() );
-        return;
+        flash( $e->getMessage(), 'danger' );
+        redirect_back();
     }
 
     if ( ! file_exists( '../images' ) ) {
@@ -174,17 +199,39 @@ function is_Submit( $key = 'action' ) {
     return isset( $_POST[$key] ) && ! is_array( $_POST[$key] );
 }   
 
+function img_exists( $img, $img_dir = '../images' ) {
+    $image_path = $img_dir . '/' .  $img;
+
+    return file_exists( $image_path ) &&  ! is_dir( $image_path );
+}
+
+function get_image_path( $img, $img_dir = '../images' ) {
+    $image_path = $img_dir . '/' . $img;
+
+    return $image_path;
+}
+
 // ここから出力系のfunction
 
 function require_foreach( $datas, $each_var ,$path ) {
     if ( count( $datas ) > 0 ) {
         foreach ( $datas as ${$each_var} ) {
-            require ( $path );
+            require( $path );
         }
     } else {
         print 'データなし';
         exit();
     }
+}
+
+function alert( $type , $message ) {  
+    ?>
+    <div class="container">
+        <div class="alert alert-dismissible alert-<?= $type ?>">
+        <?= h( $message ); ?>
+        </div>
+    </div>
+    <?php
 }
 
 function error_display( $errors ) { 
@@ -195,17 +242,7 @@ function error_display( $errors ) {
           <li><?= h ( $error ) ?></li>
           <?php endforeach; ?>
           </div>
-      </div><?php 
-  }
-
-function message_display( $type , $message ) {  
-    ?>
-    <div class="container">
-        <div class="alert alert-dismissible alert-<?php print ( $type ) ?>">
-        <?php print h( $message ); ?>
-        </div>
-    </div>
-    <?php
+      </div><?php
 }
 
 // 開発環境時のみ、引数をvar_dumpで出力します。
@@ -231,7 +268,7 @@ function pagination( $datas, $limit = 25 ) {
     if ( $request_page ) {
         if ( ! is_numeric( $request_page ) ) {
             // string型
-            message_display( 'danger', 'pageパラメータは数値を指定してください' );
+            alert( 'danger', 'pageパラメータは数値を指定してください' );
             exit();
         } else {
             $page = $request_page;
@@ -245,7 +282,7 @@ function pagination( $datas, $limit = 25 ) {
     if ( $page > 0  && $page <= $page_count  ) {
         $start = ( $page * $limit ) - $limit; 
     } else {
-        message_display( 'warning', $page . 'ページ目は存在しなかったので1ページ目を表示しています' );
+        alert( 'warning', $page . 'ページ目は存在しなかったので1ページ目を表示しています' );
         $start = 0;
     }
     ?>

@@ -3,6 +3,7 @@
 require (  "../setting_func.php" );
 require ( get_require_dir() . "/user.php" );
 require ( get_require_dir() . "/post.php" );
+require ( get_require_dir() . "/relationship.php" );
 require ( get_require_dir() . "/like.php" );
 require ( get_require_dir() . "/retweet.php" );
 

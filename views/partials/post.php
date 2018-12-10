@@ -1,17 +1,16 @@
 
+
 <div class="container">
     <div class="card card--extend">
     <div class="card-body">
-        <?php $post_image = '../images/' . $post['image']; ?>
-        <?php if ( file_exists( $post_image ) && ! is_dir( $post_image ) ): ?>
-        <img src=<?= h( $post_image ) ?> class="img-circle post-image" alt="...">
+        <?php if ( img_exists( $post['image'] ) ): ?>
+        <img src=<?= h( get_image_path( $post['image'] ) ) ?> class="img-circle post-image" alt="...">
         <?php endif; ?> 
         <h1 class="card-title"><?= h( $post['title'] ); ?></h1>
 
         <a class="post-user-link" href = "user_show.php?id=<?= h( $post['user_id'] ) ?>">
-            <?php $post_image = '../images/' . get_user_info( $post['user_id'], 'image' ); ?>
-            <?php if ( file_exists( $post_image ) && ! is_dir( $post_image ) ): ?>
-            <img src=<?= h( $post_image ) ?> class="img-circle user-image-short" alt="...">
+            <?php if ( img_exists( $post_image = get_user_info( $post['user_id'], 'image' ) ) ): ?>
+            <img src=<?= h( get_image_path( $post_image ) ) ?> class="img-circle user-image-short" alt="...">
             <?php endif; ?> 
             <?= h( get_user_info( $post['user_id'], 'user_name' ) ) ?>( @<?= h( get_user_info( $post['user_id'], 'nickname' ) ) ?> )
         </a>
@@ -31,20 +30,20 @@
         <?php else: ?>
         <form action="" method="post">
         <input type="hidden" name="post_id" value="<?= h( $post['id'] ); ?>">
-        <input type="submit" value="いいねを外す<?=h ( get_post_like_users( $post['id'], 'count' ) ) ?>" name="unlike" class="btn btn-danger">
+        <input type="submit" value="いいねを外す <?=h ( get_post_like_users( $post['id'], 'count' ) ) ?>" name="unlike" class="btn btn-danger">
         </form>
         <?php endif; ?>
         
         <?php if ( ! is_retweet( $post['id'] ) ): ?>
         <form action="" method="post">
         <input type="hidden" name="post_id" value="<?= h( $post['id'] ); ?>">
-        <input type="submit" value="retweet" name="retweet" class="btn btn-info">
+        <input type="submit" value="retweet <?= h( get_post_retweeted_user( $post['id'] ) ) ?>" name="retweet" class="btn btn-info">
         </form>
 
         <?php else: ?>
         <form action="" method="post">
         <input type="hidden" name="post_id" value="<?= h( $post['id'] ); ?>">
-        <input type="submit" value="retweetを外す" name="unretweet" class="btn btn-primary">
+        <input type="submit" value="retweetを外す <?= h( get_post_retweeted_user( $post['id'] ) ) ?>" name="unretweet" class="btn btn-primary">
         </form>
         <?php endif; ?>
 

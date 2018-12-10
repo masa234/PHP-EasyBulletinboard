@@ -40,8 +40,8 @@ function authenticate( $nickname, $password ) {
     $result = query( $query, 'fetch' );
 
     if ( $result['count'] == 0 ) {
-        message_display( 'danger', 'ユーザ名が間違っています' );
-        return;
+        flash( 'ログインに失敗しました', 'danger' );
+        redirect_back();
     }
     $datas = $result['datas'];
 
@@ -49,10 +49,11 @@ function authenticate( $nickname, $password ) {
     if ( password_verify( $password, $datas['password'] ) ) {
         session_set_array( $datas );
         session_set( 'session_created_at', strtotime( 'now' ) );
-        header( "Location: posts.php" );
-        exit();
+        flash( 'ログインに成功しました', 'success' );
+        redirect( 'posts.php' );
     } else {
-        message_display( 'danger', 'ログインに失敗しました' );
+        flash( 'ログインに失敗しました', 'danger' );
+        redirect_back();
     }
 }
 
@@ -70,6 +71,10 @@ function session_get( $key, $default = null ) {
     return isset( $_SESSION[$key] ) ? $_SESSION[$key] : $default;
 }
 
+function session_remove( $key ) {
+    unset( $_SESSION[$key] );
+}
+
 function session_clear() {
     $_SESSION = array();
 }
@@ -77,4 +82,33 @@ function session_clear() {
 // ログインしていればtrueを返却、していなければfalseを返却
 function isAuthenticated() {
     return isset( $_SESSION['id'] );
+}
+
+function redirect( $path ) {
+    header( "Location:" .  $path );
+    exit(); 
+}
+
+function redirect_back() {
+    $referrer =  isset( $_SERVER['HTTP_REFERER'])? $_SERVER['HTTP_REFERER'] : 'posts.php';
+    header( 'Location: ' . $referrer );
+    exit();
+}
+function flash( $object, $type = 'success' ) {
+    $_SESSION['flash'][$type] = $object;
+}
+
+// navbar.phpの内部でこのfunctionを実行。
+// sessionのflashにデータが格納している場合、その値のアラート表示。
+function flash_display() {
+    if( $flashes = session_get( 'flash' ) ) {
+        foreach( $flashes as $type => $object ) {
+            if ( ! is_array( $object ) ) {
+                alert( $type, $object );
+            } else {
+                error_display( $object );
+            }
+        }
+    }
+    session_remove( 'flash' );
 }

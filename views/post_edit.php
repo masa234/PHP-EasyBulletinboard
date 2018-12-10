@@ -3,14 +3,13 @@
 require (  "../setting_func.php" );
 require ( get_require_dir() . "/post.php" );
 
-// getパラメータでidが入力されていてそれが数値の場合
-if ( get_Get( 'id' ) && is_numeric( get_Get( 'id' ) )  
-     && isCurrentUser( 'posts', get_Get( 'id' ) ) ) {
+$post = find( 'posts' ,get_Get( 'id' ) );
 
-    $post = find( 'posts' ,get_Get( 'id' ) );
-} else {
-    header( "Location:posts.php" );
-    exit();
+// getパラメータでidが入力されていてそれが数値の場合
+if ( ! is_numeric( get_Get( 'id' ) )  
+     || ! isCurrentUser( 'posts', get_Get( 'id' ) ) || ! $post  ) {
+    flash( 'render_404','danger' );
+    redirect( 'posts.php' );
 }    
 
 if ( is_Submit() ) {

@@ -55,6 +55,12 @@
                 マイページ
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="room.php?id=<?= h( get_current_user_id() ) ?>">
+                <span data-feather="bar-chart-2"></span>
+                DMを送る
+              </a>
+            </li>
             <?php else: ?>
             <li class="nav-item">
               <a class="nav-link" href="register.php">
@@ -75,6 +81,7 @@
     </div>
   </div>
   <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <?php flash_display(); ?>
 <body>
 
     <script src="http://code.jquery.com/jquery-latest.js"></script>

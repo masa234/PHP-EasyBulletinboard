@@ -115,3 +115,54 @@ form {
 .post-user-link {
     color: blue;
 }
+
+a.nav-link.active.show {
+    background-color: black !important;
+    color: white;
+}
+
+/* .nav-link--extend {
+    background-color: white;
+    color: black;
+    border: 5px  blue !important;
+} */
+
+.message-users {
+    margin: 20px;
+}
+
+.message_user {
+    color:white;
+    background-color:black;
+    margin: 10px;
+    padding: 10px;
+}
+
+.float-left {
+    text-align: left;
+}
+
+.float-right {
+    text-align: right;
+}
+
+.my-message {
+    text-align: right;
+}
+
+.other-user-message {
+    text-align: left
+}
+
+.messages {
+    background-color: white;
+}
+
+.message:first-child {
+    padding-top: 20px;
+    margin: 20px;
+}
+
+.message {
+    margin: 20px;
+}

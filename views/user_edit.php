@@ -13,7 +13,8 @@ if ( is_Submit() ) {
         }
         user_updateOrCreate( 'update', get_Post( 'user_name' ), get_Post( 'nickname' ), get_Post( 'email' ), get_Post( 'password' ), $image_path );
     } else {
-        message_display( 'danger', 'パスワードが違います' );
+        flash( 'パスワードが違います', 'danger' );
+        redirect_back();
     } 
 } 
 

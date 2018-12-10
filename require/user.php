@@ -1,7 +1,6 @@
 <?php
 
 function user_updateOrCreate( $order ,$user_name, $nickname, $email, $password, $filename ) {
-
     // データをエスケープ
     $user_name = escape( $user_name );
     $nickname = escape( $nickname );
@@ -55,7 +54,7 @@ function user_updateOrCreate( $order ,$user_name, $nickname, $email, $password, 
 
         if ( query( $query ) ) {
             set_current_user();
-            message_display( 'success', 'ユーザ情報の編集に成功しました' ); 
+            alert( 'success', 'ユーザ情報の編集に成功しました' ); 
         }
     }
 }
@@ -64,7 +63,7 @@ function user_delete( $user_id ) {
     $user_id = escape( $user_id );
     
     if ( is_Current_user( $user_id ) || ! is_Admin() ) {
-        message_display( 'danger' , '管理者ではない、もしくは削除対象が自分自身です' );
+        alert( 'danger' , '管理者ではない、もしくは削除対象が自分自身です' );
         return;
     }
 
@@ -76,7 +75,7 @@ function user_delete( $user_id ) {
     query( $query );    
     
     if ( query( $query ) ) {
-        message_display( 'success' , 'ユーザの削除に成功しました' );
+        alert( 'success' , 'ユーザの削除に成功しました' );
     }
 }
 
@@ -147,11 +146,9 @@ function user_password_validation( $password, $errors = null ) {
     return $errors;
 }
 
-// 後で名前変えます（ 関数名に違和感があるので ）
 function set_current_user() {
     $current_user_id = get_current_user_id();
-    $current_user_info = find( 'users' ,$current_user_id );
-
+    $current_user_info = find_by( 'users' ,$current_user_id );
     session_set_array( $current_user_info );
 }
 
@@ -164,6 +161,38 @@ function is_Admin() {
     return session_get( 'admin' ) == '1';
 }
 
+function get_user_post( $user_id, $count = null ) {
+    $user_id = escape( $user_id );
+
+    $query ="
+        SELECT 
+            posts.id,
+            posts.title,
+            posts.content,
+            posts.image,
+            posts.created_at,
+            posts.updated_at,
+            posts.user_id,
+            retweets.user_id as retweet_user_id
+        FROM 
+            posts LEFT JOIN retweets
+        ON  
+            posts.id = retweets.post_id  
+        WHERE  
+            posts.user_id = '$user_id'
+        OR
+            retweets.user_id = '$user_id'
+        ";
+
+    $result = query( $query );
+
+    if ( $count == 'count' ) {
+        return $result['count'];
+    }
+    
+    return $result['datas'];
+}
+
 function get_user_value( $key ) {
     return get_Post( $key ) ? get_Post( $key ) : session_get( $key );
 }
@@ -172,9 +201,8 @@ function get_user_info( $user_id, $type ) {
     if ( is_null( $user_id ) ) {
        $user_id = get_current_user_id();
     } 
-
     $user_id = escape( $user_id );
-    $result = find( 'users' , $user_id );
+    $result = find_by( 'users' , $user_id );
 
     return $result[$type];
 }

@@ -2,8 +2,8 @@
 
 function like( $post_id ) {
     if ( is_liked( $post_id ) ) {
-        message_display( 'danger' , '失敗しました' );
-        return;
+        flash( '失敗しました', 'danger' );
+        redirect_back();
     }
 
     $user_id = get_current_user_id();
@@ -16,15 +16,16 @@ function like( $post_id ) {
             '$user_id', '$post_id' )
         ";
 
-    query( $query );
-
-    message_display( 'success' , '投稿をいいねしました' );
+    if ( query( $query ) ) {
+        flash( '投稿をいいねしました' );
+        redirect_back();
+    }
 }
 
 function unlike( $post_id ) {
     if ( ! is_liked( $post_id ) ) {
-        message_display( 'danger' , '失敗しました' );
-        return;
+        flash( '失敗しました', 'danger' );
+        redirect_back();
     }
 
     $user_id = get_current_user_id();;
@@ -35,10 +36,11 @@ function unlike( $post_id ) {
         WHERE user_id = '$user_id'
         AND post_id = '$post_id'
         ";
-    
-    query( $query );
 
-    message_display( 'success' , '投稿のいいねを外しました' );
+    if ( query( $query ) ) {
+        flash( '投稿のいいねを外しました' );
+        redirect_back();
+    }
 }
 
 function is_liked( $post_id ) {

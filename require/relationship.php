@@ -1,5 +1,48 @@
 <?php 
 
+function follow( $user_id ) {
+    $user_id = escape( $user_id );
+    $current_user_id = get_current_user_id();;
+
+    if ( is_following( $user_id ) || is_Current_user( $user_id ) ) {
+        flash( 'フォローが失敗しました', 'danger' );
+        redirect_back();
+    }
+ 
+    $query = "
+        INSERT INTO followings (
+            user_id, followed_id )
+        VALUES (
+            '$user_id','$current_user_id'
+        ) ";
+
+    if ( query( $query ) ) {
+        flash( 'フォローに成功しました' );
+        redirect_back();
+    }
+}
+
+function unfollow( $user_id ) {
+    $user_id = escape( $user_id );
+    $current_user_id = get_current_user_id();;
+
+    if ( ! is_following( $user_id ) || is_Current_user( $user_id ) ) {
+        message_display( 'danger' , '失敗しました' );
+        return;
+    }
+ 
+    $query = "
+        DELETE FROM followings 
+        WHERE user_id = '$user_id'
+        AND followed_id = '$current_user_id'
+        ";
+
+    if ( query( $query ) ) {
+        flash( 'フォローを外しました' );
+        redirect_back();
+    }
+}
+
 function is_following( $user_id ) {
     $user_id = escape( $user_id );
     $current_user_id = get_current_user_id();;
@@ -14,49 +57,6 @@ function is_following( $user_id ) {
     $result = query( $query );
 
     return $result['count'] == '1';
-}
-
-function follow( $user_id ) {
-    $user_id = escape( $user_id );
-    $current_user_id = get_current_user_id();;
-
-    if ( is_following( $user_id ) || is_Current_user( $user_id ) ) {
-        message_display( 'danger' , '失敗しました' );
-        return;
-    }
- 
-    $query = "
-        INSERT INTO followings (
-            user_id, followed_id )
-        VALUES (
-            '$user_id','$current_user_id'
-        ) ";
-
-    query( $query );
-
-    message_display( 'success' , 'フォローに成功しました' );
-}
-
-function unfollow( $user_id ) {
-    var_dump( $user_id );
-    $user_id = escape( $user_id );
-    $current_user_id = get_current_user_id();;
-
-    var_dump( ! is_following( $user_id ) );
-    if ( ! is_following( $user_id ) || is_Current_user( $user_id ) ) {
-        message_display( 'danger' , '失敗しました' );
-        return;
-    }
- 
-    $query = "
-        DELETE FROM followings 
-        WHERE user_id = '$user_id'
-        AND followed_id = '$current_user_id'
-        ";
-
-    query( $query );
-
-    message_display( 'success' , 'フォロー解除に成功しました' );
 }
 
 // フォロワーの情報、フォローしているユーザの情報を配列で返します。
@@ -117,4 +117,29 @@ function get_relationships_user( $type ,$user_id ) {
     $result = query( $query );
 
     return $result['datas'];
+}
+
+// followしているユーザのIDを取得
+function get_following_ids( $user_id = '333' ) {
+    if ( ! $user_id ) {
+        $user_id = get_current_user_id();
+    } 
+
+    $query ="
+        SELECT * FROM followings
+        WHERE 
+        followed_id = '$user_id'
+        ";
+
+    $result = query( $query );
+    $following_info = $result['datas'];
+
+    if ( count( $following_info )> 0  ) {
+        foreach( $following_info as $following ) {
+            $following_ids[] = $following['user_id'];
+        }
+        return $following_ids;
+    } 
+
+    return $following_info;
 }

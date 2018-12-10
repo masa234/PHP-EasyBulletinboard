@@ -10,8 +10,8 @@ function post_updateOrCreate( $order, $title, $content, $filename, $post_id = nu
     $errors = post_validation( $title, $content, $post_id );
 
     if ( count( $errors ) > 0 ) {
-        error_display( $errors );
-        return;
+        flash( $errors, 'warning' );
+        redirect_back();
     }
 
     // create
@@ -25,10 +25,9 @@ function post_updateOrCreate( $order, $title, $content, $filename, $post_id = nu
 
         $message = '新規投稿に成功しました';
     } else if ( $order == 'update' ) {
-
         if ( ! isCurrentUser( 'posts' ,$post_id ) ) {
-            header( "Location: posts.php" );
-            exit(); 
+            flash( '編集権限がありません', 'danger' );
+            redirect( 'posts.php' );
         }
 
         $query = "
@@ -45,9 +44,33 @@ function post_updateOrCreate( $order, $title, $content, $filename, $post_id = nu
     } 
 
     if ( query( $query ) ) {
-        message_display( 'success', $message );
+        flash( $message );
+        redirect_back();
     }
 }   
+
+function post_delete( $post_id ) {
+
+    $post_id = escape( $post_id );
+    
+    if ( ! isCurrentUser( 'posts' ,$post_id ) ) {
+        header( "Location: posts.php" );
+        exit();
+    }
+
+    $user_id = get_current_user_id();
+
+    $query ="
+        DELETE FROM posts 
+        WHERE id = '$post_id'
+        AND user_id = '$user_id'
+        ";
+
+    if ( query( $query ) ) {
+        flash( '削除に成功しました' );
+        redirect_back();
+    }
+}
 
 // updateの際は、引数にpostのidを指定する
 function post_validation( $title, $content, $post_id = null ) {
@@ -55,7 +78,7 @@ function post_validation( $title, $content, $post_id = null ) {
 
     // updateの際は、編集する投稿の情報を先に取得する
     if ( $post_id ) {
-        $post = find( 'posts' , $post_id );
+        $post = find_by( 'posts' , $post_id );
     } else {
         $post['title'] = null;
     }
@@ -84,47 +107,57 @@ function post_validation( $title, $content, $post_id = null ) {
 
 function get_feed() {
     $user_id = get_current_user_id();
+    $following_ids = get_following_ids();
 
+    if ( $following_ids ) { 
+        $following_ids = implode( ',', $following_ids );
+        $or_retweet = "OR 
+        retweets.user_id IN ( ".$following_ids . " ) ";
+    } else {
+        $or_retweet = null;
+    }
+
+
+    // 以下の条件に合致したpostを抽出する。
+    // 1, 自分がフォローしているユーザの投稿
+    // 2, 自分の投稿
+    // 3, 自分がリツイートした投稿
+    // 4, 自分がフォローしているユーザがリツイートした投稿
     $query = "
-        SELECT  
-            *                
+        SELECT 
+            posts.id,
+            posts.title,
+            posts.content,
+            posts.image,
+            posts.created_at,
+            posts.updated_at,
+            posts.user_id,
+            followings.followed_id,
+            retweets.user_id as retweet_user_id
         FROM 
             posts LEFT JOIN followings
         ON  
             posts.user_id = followings.user_id
+        LEFT JOIN retweets
+        ON 
+            posts.id = retweets.post_id
         WHERE 
             followings.followed_id= '$user_id'
         OR 
             posts.user_id = '$user_id'
+        OR 
+            ( retweets.user_id = '$user_id' 
+            $or_retweet )
+        GROUP BY
+            posts.id
         ORDER BY 
             posts.updated_at DESC
         ";
-
+        var_dump ( $query ); 
+    
     $result = query( $query );
 
     return $result;
-}
-
-function post_delete( $post_id ) {
-
-    $post_id = escape( $post_id );
-    
-    if ( ! isCurrentUser( 'posts' ,$post_id ) ) {
-        header( "Location: posts.php" );
-        exit();
-    }
-
-    $user_id = get_current_user_id();
-
-    $query ="
-        DELETE FROM posts 
-        WHERE id = '$post_id'
-        AND user_id = '$user_id'
-        ";
-
-    query( $query );
-
-    message_display( 'success', '削除に成功しました' );
 }
 
 function get_post_value( $key, $post, $default = '' ) {
