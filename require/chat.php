@@ -75,3 +75,31 @@ function get_ChatMessages( $other_id ) {
 
     return $result['datas'];
 }
+
+// 既読をつける
+function read( $id ) {
+    $user_id = get_current_user_id();
+
+    $query = "
+        UPDATE messages SET 
+            read_flag = '1'
+        WHERE id = '$id'
+        AND receive_user_id = '$user_id'
+    ";
+
+    query( $query );
+    var_dump( $query );
+}
+
+function is_read( $id ) {
+    $user_id = get_current_user_id();
+
+    $query = "
+        SELECT * FROM messages
+        WHERE id = '$id'
+        ";
+    
+    $result = query( $query, 'fetch' );
+
+    return $result['datas']['read_flag'] == '1';
+}

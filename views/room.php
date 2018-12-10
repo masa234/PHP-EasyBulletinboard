@@ -51,6 +51,7 @@ if ( is_Submit( 'send_message' ) ) {
     <!-- 自分が相手に送信したメッセージの場合 -->
         <?php if ( is_CurrentUser_id( $message['writer_user_id'] ) ): ?>
         <div class= "my-message message">
+            <?= h ( is_read( $message['id'] ) ? 'read' : '' ) ?>
             <?php if ( img_exists( session_get( 'image' ) ) ): ?>
             <img src=<?= h( get_image_path( session_get( 'image' ) ) ) ?> class="img-circle user-image-short" alt="...">
             <?php endif; ?> 
@@ -58,6 +59,7 @@ if ( is_Submit( 'send_message' ) ) {
         </div>
         <hr>
         <?php else: ?>
+        <?php read( $message['id'] ) ?>
         <div class= "other-user-message message">
             <?php if ( img_exists( $other_user_image = get_user_info( $other_id, 'image' ) ) ): ?>
             <img src=<?= h( get_image_path( $other_user_image ) ) ?> class="img-circle user-image-short" alt="...">
