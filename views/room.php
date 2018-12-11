@@ -27,6 +27,10 @@ if ( is_Submit() ) {
 if ( is_Submit( 'send_message' ) ) {
     speak( get_Post( 'content') , $other_user['id'] );
 }
+
+if ( is_Submit( 'del_message' ) ) {
+    del_message( get_Post( 'del_message_id' ) );
+}
 ?> 
 
 <!-- id (自分のid)と相手ユーザのid(other_id)が指定されている場合  -->
@@ -40,9 +44,9 @@ if ( is_Submit( 'send_message' ) ) {
         <div class="message-form">
             <div class="form-group">
                 <label>Message</label>
-                <input type="text" name="content" class="form-control form-control-lg" placeholder="Message @<?= h( $other_user['nickname'] ) ?>">
+                <input type="text" name="content" class="form-control form-control-lg" id ="message_content" placeholder="Message @<?= h( $other_user['nickname'] ) ?>">
             </div>
-            <button type="submit" class="btn-info btn-lg" name="send_message">メッセージを送る</button>
+            <button type="submit" class="btn-info btn-lg" id="message_send" name="send_message">メッセージを送る</button>
         </div>
     </form>
     <?php $messages = get_ChatMessages( $other_id ); ?>
@@ -56,6 +60,10 @@ if ( is_Submit( 'send_message' ) ) {
             <img src=<?= h( get_image_path( session_get( 'image' ) ) ) ?> class="img-circle user-image-short" alt="...">
             <?php endif; ?> 
             <?=h( $message['content'] ) ?>
+
+            <form method="POST" onsubmit="return check();">
+            <input type="hidden" name="del_message_id" value="<?=h ( $message['id'] ) ?>"/>
+            <button type="submit" class="btn btn-danger btn-lg" name= "del_message" >削除する</button>
         </div>
         <hr>
         <?php else: ?>

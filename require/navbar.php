@@ -88,25 +88,25 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
-    <script type="text/javascript">
-      var check = function check(){
+    <script src= "../js/ajax.js"></script>
+    <script>
+    var check = function check(){
 
-        if( window.confirm( 'Are you sure?' ) ){
+    if( window.confirm( 'Are you sure?' ) ){
 
-          return true;
+      return true;
 
-        } else{
+    } else{
 
-          return false;
+      return false;
 
-        }
+    }
 
-      }
+    }
 
-      function countLength( text, field, count ) {
-      
-        document.getElementById( field ).innerHTML = text.length;
+    function countLength( text, field, count ) {
 
-      } 
-      </script>
+    document.getElementById( field ).innerHTML = text.length;
 
+    } 
+    </script>

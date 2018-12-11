@@ -88,7 +88,6 @@ function read( $id ) {
     ";
 
     query( $query );
-    var_dump( $query );
 }
 
 function is_read( $id ) {
@@ -102,4 +101,22 @@ function is_read( $id ) {
     $result = query( $query, 'fetch' );
 
     return $result['datas']['read_flag'] == '1';
+}
+
+function del_message( $id ) {
+    $id = escape( $id );
+    if( ! isCurrentUser( 'messages', $id, $column = 'writer_user_id' ) ) {
+        flash( '削除権限がありません', 'danger' );
+        redirect_back();
+    }
+
+    $query = "
+        DELETE FROM messages
+        WHERE id = $id
+        ";
+    
+    if ( query( $query ) ) {
+        flash( '削除に成功しました' );
+        redirect_back();
+    }
 }

@@ -39,9 +39,9 @@ function authenticate( $nickname, $password ) {
 
     $result = query( $query, 'fetch' );
 
-    if ( $result['count'] == 0 ) {
-        flash( 'ログインに失敗しました', 'danger' );
-        redirect_back();
+    if ( $result['count'] == 0 ) {  
+        alert( 'danger', '失敗しました' ); 
+        return;
     }
     $datas = $result['datas'];
 
@@ -52,8 +52,7 @@ function authenticate( $nickname, $password ) {
         flash( 'ログインに成功しました', 'success' );
         redirect( 'posts.php' );
     } else {
-        flash( 'ログインに失敗しました', 'danger' );
-        redirect_back();
+        alert( 'danger', '失敗しました' );
     }
 }
 

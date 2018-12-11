@@ -88,15 +88,16 @@ function isUniq( $table, $column, $value ) {
     return $result['count'] == 0;
 }
 
-function isCurrentUser( $table, $id ) {
+function isCurrentUser( $table, $id, $column = 'user_id' ) {
     $id = escape( $id );
     $user_id = get_current_user_id();
 
     $query ="
         SELECT * FROM $table
         WHERE id = '$id'
-        AND user_id = '$user_id'
+        AND $column = '$user_id'
         ";
+        var_dump( $query );
 
     $result = query( $query );
 

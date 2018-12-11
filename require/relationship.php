@@ -1,5 +1,7 @@
 <?php 
 
+// ここからfollow関連のfunction
+
 function follow( $user_id ) {
     $user_id = escape( $user_id );
     $current_user_id = get_current_user_id();;
@@ -27,7 +29,7 @@ function unfollow( $user_id ) {
     $current_user_id = get_current_user_id();;
 
     if ( ! is_following( $user_id ) || is_Current_user( $user_id ) ) {
-        message_display( 'danger' , '失敗しました' );
+        alert( 'danger' ,'unfollow failed' );
         return;
     }
  
@@ -143,3 +145,4 @@ function get_following_ids( $user_id = '333' ) {
 
     return $following_info;
 }
+
