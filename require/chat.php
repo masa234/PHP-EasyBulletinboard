@@ -27,13 +27,13 @@ function speak( $content, $other_id ) {
         redirect_back();
     }
 
-    $user_id = get_current_user_id();
+    $current_id = get_current_user_id();
 
     $query = "
         INSERT INTO messages( 
             content, receive_user_id, writer_user_id
         ) VALUES (
-            '$content', '$other_id', '$user_id'
+            '$content', '$other_id', '$current_id'
         )";
 
     if ( query( $query ) ) {
@@ -56,19 +56,19 @@ function content_validation( $content, $errors = null ) {
 }
 
 function get_ChatMessages( $other_id ) {
-    $user_id = get_current_user_id();
+    $current_id = get_current_user_id();
     $other_id = escape( $other_id );
 
     $query = "
         SELECT * FROM messages
         WHERE  
-            ( receive_user_id = '$user_id' 
+            ( receive_user_id = '$current_id' 
             AND
             writer_user_id = '$other_id' )
         OR  
             ( receive_user_id = '$other_id' 
             AND
-            writer_user_id = '$user_id' )
+            writer_user_id = '$current_id' )
         ";
         
     $result = query( $query );
@@ -78,20 +78,20 @@ function get_ChatMessages( $other_id ) {
 
 // 既読をつける
 function read( $id ) {
-    $user_id = get_current_user_id();
+    $current_id = get_current_user_id();
 
     $query = "
         UPDATE messages SET 
             read_flag = '1'
         WHERE id = '$id'
-        AND receive_user_id = '$user_id'
+        AND receive_user_id = '$current_id'
     ";
 
     query( $query );
 }
 
 function is_read( $id ) {
-    $user_id = get_current_user_id();
+    $current_id = get_current_user_id();
 
     $query = "
         SELECT * FROM messages
@@ -119,4 +119,39 @@ function del_message( $id ) {
         flash( '削除に成功しました' );
         redirect_back();
     }
+}
+
+function chat( $messages ) { ?>
+    <?php if( count( $messages ) > 0 ): ?>
+    <div class="messages">
+    <?php foreach ( $messages as $message ): ?>
+    <!-- 自分が相手に送信したメッセージの場合 -->
+        <?php if ( is_CurrentUser_id( $message['writer_user_id'] ) ): ?>
+        <div class= "my-message message">
+            <?= h ( is_read( $message['id'] ) ? 'read' : '' ) ?>
+            <?php if ( img_exists( session_get( 'image' ) ) ): ?>
+            <img src=<?= h( get_image_path( session_get( 'image' ) ) ) ?> class="img-circle user-image-short" alt="...">
+            <?php endif; ?> 
+            <?=h( $message['content'] ) ?>
+    
+            <form method="POST" onsubmit="return check();">
+            <input type="hidden" name="del_message_id" value="<?=h ( $message['id'] ) ?>"/>
+            <button type="submit" class="btn btn-danger btn-lg" name= "del_message" >削除する</button>
+        </div>
+        <hr>
+        <?php else: ?>
+        <a href="room.php?id=<?=h( get_current_user_id() ) ?>&other_id=<?= h( $message['writer_user_id'] ) ?>">
+        <?php read( $message['id'] ) ?>
+        <div class= "other-user-message message">
+            <?php if ( img_exists( $other_user_image = get_user_info( $message['writer_user_id'], 'image' ) ) ): ?>
+            <img src=<?= h( get_image_path( $other_user_image ) ) ?> class="img-circle user-image-short" alt="...">
+            <?php endif; ?> 
+            <?=h( $message['content'] ) ?>
+        </div>
+        </a>
+        <hr>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    </div> 
+    <?php endif; 
 }

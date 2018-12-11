@@ -58,6 +58,11 @@
             <li class="nav-item">
               <a class="nav-link" href="room.php?id=<?= h( get_current_user_id() ) ?>">
                 <span data-feather="bar-chart-2"></span>
+                <?php if ( get_unread_message( 'count' ) > 0 ): ?> 
+                <button type="button" class="btn btn-primary">
+                未読DM <span class="badge badge-light"><?= get_unread_message( 'count' ) ?></span>
+                </button>
+                <?php endif; ?>
                 DMを送る
               </a>
             </li>
