@@ -42,6 +42,14 @@ if ( is_Submit( 'unretweet' ) ) {
     unRetweet( get_Post( 'post_id' ) );
 }
 
+if ( is_Submit( 'block' ) ) {
+    block( get_Post( 'blocked_user_id' ) );
+}
+
+if ( is_Submit( 'unBlock' ) ) {
+    unBlock( get_Post( 'blocked_user_id' ) );
+}
+
 require ( get_partials_dir() . "/user.php" );
 
 ?>

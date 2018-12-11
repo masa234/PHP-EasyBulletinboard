@@ -17,6 +17,14 @@ if ( is_Submit( 'unfollow' ) ) {
     unfollow( get_Post( 'unfollow_id' ) );
 }
 
+if ( is_Submit( 'block' ) ) {
+    block( get_Post( 'blocked_user_id' ) );
+}
+
+if ( is_Submit( 'unBlock' ) ) {
+    unBlock( get_Post( 'blocked_user_id' ) );
+}
+
 $query = "SELECT * FROM users ORDER BY id DESC";
 $result = query( $query );
 
