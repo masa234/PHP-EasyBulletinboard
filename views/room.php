@@ -33,70 +33,45 @@ if ( is_Submit( 'del_message' ) ) {
 }
 ?> 
 
+<div class="container">
+<?php if ( get_unread_message( 'count' ) > 0 ): ?>
+<?php alert( 'danger', '未読messageが' . get_unread_message( 'count' )  . '件あります' ) ?>
+<?php chat( $unreads = get_unread_message() ) ?>
+<?php endif; ?>
+
 <!-- id (自分のid)と相手ユーザのid(other_id)が指定されている場合  -->
 <?php if( $other_id ): ?>
-<div class="container">
-    <h1><a href="user_show.php?id=<?=h( $other_user['id'] ) ?>">
-        @<?=h( $other_user['nickname'] ) ?></a>さんとのチャット画面です
-    </h1>
+<h1><a href="user_show.php?id=<?=h( $other_user['id'] ) ?>">
+    @<?=h( $other_user['nickname'] ) ?></a>さんとのチャット画面です
+</h1>
 
-    <form method="post">
-        <div class="message-form">
-            <div class="form-group">
-                <label>Message</label>
-                <input type="text" name="content" class="form-control form-control-lg" id ="message_content" placeholder="Message @<?= h( $other_user['nickname'] ) ?>">
-            </div>
-            <button type="submit" class="btn-info btn-lg" id="message_send" name="send_message">メッセージを送る</button>
+<form method="post">
+    <div class="message-form">
+        <div class="form-group">
+            <label>Message</label>
+            <input type="text" name="content" class="form-control form-control-lg" id ="message_content" placeholder="Message @<?= h( $other_user['nickname'] ) ?>">
         </div>
-    </form>
-    <?php $messages = get_ChatMessages( $other_id ); ?>
-    <div class="messages">
-    <?php foreach ( $messages as $message ): ?>
-    <!-- 自分が相手に送信したメッセージの場合 -->
-        <?php if ( is_CurrentUser_id( $message['writer_user_id'] ) ): ?>
-        <div class= "my-message message">
-            <?= h ( is_read( $message['id'] ) ? 'read' : '' ) ?>
-            <?php if ( img_exists( session_get( 'image' ) ) ): ?>
-            <img src=<?= h( get_image_path( session_get( 'image' ) ) ) ?> class="img-circle user-image-short" alt="...">
-            <?php endif; ?> 
-            <?=h( $message['content'] ) ?>
-
-            <form method="POST" onsubmit="return check();">
-            <input type="hidden" name="del_message_id" value="<?=h ( $message['id'] ) ?>"/>
-            <button type="submit" class="btn btn-danger btn-lg" name= "del_message" >削除する</button>
-        </div>
-        <hr>
-        <?php else: ?>
-        <?php read( $message['id'] ) ?>
-        <div class= "other-user-message message">
-            <?php if ( img_exists( $other_user_image = get_user_info( $other_id, 'image' ) ) ): ?>
-            <img src=<?= h( get_image_path( $other_user_image ) ) ?> class="img-circle user-image-short" alt="...">
-            <?php endif; ?> 
-            <?=h( $message['content'] ) ?>
-        </div>
-        <hr>
-        <?php endif; ?>
-    <?php endforeach; ?>
+        <button type="submit" class="btn-info btn-lg" id="message_send" name="send_message">メッセージを送る</button>
     </div>
-</div>
+</form>
+<?php $messages = get_ChatMessages( $other_id ); ?>
+<?php chat( $messages, $other_id ) ?>
 <!-- id (ログインユーザのid)のみ指定されている場合  -->
 <?php else: ?>
-<div class="container">
-    <h1>DMを送信する</h1>
-    <form method="post">
-        <div class="form-group">
-            <label>nickname</label>
-            <input type="text" name="nickname" class="form-control form-control-lg">
-        </div>
-        <button type="submit" class="btn-primary btn-lg" name="action">メッセージ画面に移動する</button>
-    </form>
-    <div class="message-users">
-    <?php $users = all( 'users' ) ?>
-    <?php foreach( $users as $user ): ?>
-    <?php if ( $user['id'] != get_current_user_id() ): ?>
-    <a href="room.php?id=<?= session_get( 'id' ) ?>&other_id=<?=h( $user['id'] )?>"  class="message_user">@<?=h( $user['nickname'] ) ?></a>
-    <?php endif ?>
-    <?php endforeach; ?>
-    <?php endif; ?>
+<h1>DMを送信する</h1>
+<form method="post">
+    <div class="form-group">
+        <label>nickname</label>
+        <input type="text" name="nickname" class="form-control form-control-lg">
     </div>
+    <button type="submit" class="btn-primary btn-lg" name="action">チャット画面に移動する</button>
+</form>
+<div class="message-users">
+<?php $users = all( 'users' ) ?>
+<?php foreach( $users as $user ): ?>
+<?php if ( $user['id'] != get_current_user_id() ): ?>
+<a href="room.php?id=<?= session_get( 'id' ) ?>&other_id=<?=h( $user['id'] )?>"  class="message_user">@<?=h( $user['nickname'] ) ?></a>
+<?php endif ?>
+<?php endforeach; ?>
+<?php endif; ?>
 </div>

@@ -196,6 +196,27 @@ function get_current_datetime() {
     return $now;
 }
 
+// ログインユーザあての未読メッセージを取得
+function get_unread_message( $count = null ) {
+    $current_id = get_current_user_id();
+
+    $query = "
+        SELECT * FROM messages
+        WHERE  
+            ( receive_user_id = '$current_id' 
+            AND
+            read_flag = '0' )
+        ";
+    
+    $result = query( $query );
+
+    if ( $count == 'count' ) { 
+        return $result['count'];
+    } 
+    
+    return $result['datas'];
+}
+
 function is_Submit( $key = 'action' ) {
     return isset( $_POST[$key] ) && ! is_array( $_POST[$key] );
 }   
