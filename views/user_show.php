@@ -50,6 +50,20 @@ if ( is_Submit( 'unBlock' ) ) {
     unBlock( get_Post( 'blocked_user_id' ) );
 }
 
+if ( is_Submit( 'lock' ) ) {
+    lock();
+}
+
+if ( is_Submit( 'unLock' ) ) {
+    unLock();
+}
+
+if ( is_Submit( 'followRequest' ) ) {
+    followRequest( get_Post( 'follow_request_id' ) );
+}
+
+
+
 require ( get_partials_dir() . "/user.php" );
 
 ?>

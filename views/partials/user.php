@@ -7,6 +7,7 @@
             <img src=<?=h( get_image_path( $user['image'] ) ) ?> class="img-circle user-image" alt="...">
             <?php endif; ?>
             <h1 class="card-title"><?=h( $user['user_name'] ); ?></h1>
+            <span><?= $user['type'] == '1' ? '(非公開アカウント)': "" ?></span>
             <div class="nickname">
                 @<?=h( $user['nickname'] ) ?>
             </div>
@@ -15,11 +16,14 @@
             following:<?=h ( get_user_relationship_count( 'following' ,$user['id'] ) ); ?><br>
             like:<?=h ( get_like_posts( $user['id'], 'count' ) ); ?>
             </a>
-            <?php  if( !  is_Current_user( $user['id'] ) ): ?>
+            <?php  if( ! is_Current_user( $user['id'] ) ): ?>
             <!-- blockされておらず、自分以外のユーザの場合のみfollowボタンを表示 -->
             <?php if ( is_blocked( $user['id'] ) ): ?>
             <div class="block-text"><?= h ( 'You blocked by @' . $user['nickname'] ) ?></div>
-            <?php else: ?>
+            <?php elseif( is_block( $user['id'] ) ): ?>
+            <div class="block-text"><?= h ( 'You block @' . $user['nickname'] ) ?></div>
+            <?php elseif ( ! is_lock( $user['id'] ) || is_followed( $user['id'] ) ): ?>
+            <!-- 鍵付きアカウントでないもしくは、followされている場合 followボタンを表示 -->
             <?php if ( ! is_following( $user['id'] ) ): ?>
             <form method="POST">
             <input type="hidden" name="follow_id" value="<?=h ( $user['id'] ) ?>"/>
@@ -34,6 +38,12 @@
             <?=h ( $user['user_name'] ) ?>のフォローを解除する</button>
             </form>
             <?php endif; ?>
+            <?php else: ?>
+            <form method="POST">
+            <input type="hidden" name="follow_request_id" value="<?=h ( $user['id'] ) ?>"/>
+            <button type="submit" class="btn btn-info btn-lg" name= "followRequest" >
+            <?=h ( $user['user_name'] ) ?>にフォローリクエストを送る</button>
+            </form>
             <?php endif; ?>  
 
             <?php  if ( ! is_block( $user['id'] ) ): ?>
@@ -57,6 +67,22 @@
             <input type="hidden" name="delete_id" value="<?=h ( $user['id'] ) ?>"/>
             <button type="submit" class="btn btn-danger btn-lg" name= "action" ><?=h( $user['user_name'] ) ?>を削除する</button>
             </form>
+            <?php endif; ?> 
+            <?php else: ?>
+
+            <?php  if( is_Current_user( $user['id'] ) && get_current() == 'user_show' ):  ?>
+            <?php  if ( ! is_lock() ): ?>
+            <!-- blockボタン -->
+            <form method="POST">
+            <button type="submit" class="btn btn-success btn-lg" name= "lock" >
+            アカウントを非公開にする</button>
+            </form>
+            <?php else: ?>
+            <form method="POST">
+            <button type="submit" class="btn btn-danger btn-lg" name= "unLock" >
+            アカウントを公開状態にする</button>
+            </form>
+            <?php endif; ?>
             <?php endif; ?>
             <?php endif; ?>
             </p>

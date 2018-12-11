@@ -206,3 +206,45 @@ function get_user_info( $user_id, $type ) {
 
     return $result[$type];
 }
+
+// ここから鍵アカウント関連のfunction
+
+function lock() {
+    $current_id = get_current_user_id();
+
+    $query ="
+        UPDATE users SET 
+            type = '1' 
+        WHERE id = '$current_id'
+    ";
+
+    if ( query( $query ) ) {
+        flash( 'アカウントを非公開にしました' );
+        redirect_back();
+    }
+}
+
+function unLock() {
+    $current_id = get_current_user_id();
+
+    $query ="
+        UPDATE users SET 
+            type = '0' 
+        WHERE id = '$current_id'
+    ";
+
+    if ( query( $query ) ) {
+        flash( 'アカウントを公開状態ににしました' );
+        redirect_back();
+    }
+}
+
+// 鍵つきアカウントかどうか
+function is_lock( $user_id = null ) {
+    if ( ! $user_id ) {
+        $user_id = get_current_user_id();
+    }
+    $user = find_by( 'users', $user_id );
+
+    return $user['type'] == '1';
+}

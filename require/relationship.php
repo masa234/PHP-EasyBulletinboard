@@ -6,8 +6,13 @@ function follow( $user_id ) {
     $user_id = escape( $user_id );
     $current_id = get_current_user_id();;
 
-    if ( is_following( $user_id ) || is_Current_user( $user_id )
-        || is_blocked( $other_id  ) ) {
+    // 既にfollowされている、自分自身をfollow
+    // ブロックされているユーザをfollow, 鍵付きアカウントをfollowしようとした場合、エラー
+    if ( is_following( $user_id ) 
+        || is_Current_user( $user_id )
+        || is_block( $user_id  ) 
+        || is_blocked( $user_id  ) 
+        || is_lock( $user_id ) ) {
         flash( 'フォローが失敗しました', 'danger' );
         redirect_back();
     }
@@ -97,6 +102,27 @@ function unfollowed_force( $other_id ) {
         flash( 'unfollowed successed' );
         redirect_back();
     }
+}
+
+function followRequest( $other_id ) {
+    $other_id = escape( $other_id );
+    $user_id = get_current_user_id();
+
+    $query = "
+        INSERT INTO follow_requests
+            ( user_id, request_user_id ) 
+        VALUES 
+            ( $user_id , '$user_id'  ) 
+        ";
+    
+    if ( query( $query ) ) {
+        flash( 'follow Requestを送信しました' );
+        redirect_back();
+    }
+}
+
+function followPermit() {
+
 }
 
 // フォロワーの情報、フォローしているユーザの情報を配列で返します。
@@ -222,7 +248,8 @@ function unBlock( $other_id ) {
     $other_id = escape( $other_id );
     $current_id = session_get( 'id' );
 
-    if ( ! is_block( $other_id ) || is_Current_user( $other_id )) {
+    if ( ! is_block( $other_id )
+        || is_Current_user( $other_id )) {
         flash( 'unBlock failed' , 'danger' );
         redirect_back();
     }
